@@ -1,9 +1,14 @@
 import Input from "@/components/input"
+import axios from "axios"
 import { useCallback, useState } from "react"
+import { signIn } from "next-auth/react"
+import { useRouter } from "next/router"
 
 const Auth = () => {
 
-    const [username, setUsername] = useState('')
+    const router = useRouter()
+
+    const [name, setName] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
 
@@ -14,6 +19,33 @@ const Auth = () => {
         setVariant(newVal)
     }, [])
 
+    // Sign in existing user
+    const login = useCallback(async () => {
+        await signIn('credentials', {
+            email,
+            password,
+            redirect: false,
+            callbackUrl: '/'
+        }).then(() => {
+            router.push('/')
+        }).catch((error) => {
+            console.log(error)
+        })
+    },[email, password])
+
+    // Register new user
+    const register = useCallback(async () => {
+        await axios.post("/api/register", {
+            name,
+            email,
+            password
+        }).then(() => {
+            login()
+        }).catch((error) => {
+            console.log(error)
+        })
+    },[name, email, password])
+
     return (
         <div className='flex justify-center'>
             <div className='bg-black bg-opacity-70 px-16 py-16 self-center mt-2 lg:w-2/5 lg:max-w-md rounded-md w-full'>
@@ -23,11 +55,11 @@ const Auth = () => {
                 <div className='flex flex-col gap-4'>
                     {variant == 'register' && (
                         <Input 
-                            id="username"
-                            onChange={(event: any) => setUsername(event.target.value)}
-                            value={username}
+                            id="name"
+                            onChange={(event: any) => setName(event.target.value)}
+                            value={name}
                             label="Username"
-                            type="username"
+                            type="name"
                         />
                     )}
                     <Input 
@@ -45,7 +77,7 @@ const Auth = () => {
                         type="password"
                     />
                 </div>
-                <button className='bg-red-600 py-3 text-white rounded-md w-full mt-10 hover:bg-red-700 transition'>
+                <button onClick={variant == 'login' ? login : register} className='bg-red-600 py-3 text-white rounded-md w-full mt-10 hover:bg-red-700 transition'>
                     {variant == 'login' ? 'Login' : 'Sign up'}
                 </button>
                 <p className="text-neutral-500 mt-12 flex justify-center">
@@ -60,3 +92,40 @@ const Auth = () => {
 }
 
 export default Auth
+
+
+
+
+
+    //  // Sign in existing user
+    // const login = useCallback(async () => {
+    //     try {
+    //         await signIn('credentials', {
+    //             email,
+    //             password,
+    //             redirect: false,
+    //             callbackUrl: '/'
+    //         })
+    //         // Upon successful login, redirect
+    //         router.push('/')
+    //     } catch (error) {
+    //         console.log(error)
+    //     }
+    // },[email, password])
+
+
+    // // Register new user
+    // const register = useCallback(async () => {
+    //     try {
+    //         await axios.post("/api/register", {
+    //             name,
+    //             email,
+    //             password
+    //         })
+    //         login()
+    //     } catch (error) {
+    //         console.log(error)
+    //     }
+    // },[name, email, password])
+
+
