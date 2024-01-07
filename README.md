@@ -3,6 +3,7 @@
 Use:
 - React
 - NEXT.js
+- NextAuth (Authentication)
 - MongoDB (Database)
 - Prisma (ORM for database)
 
