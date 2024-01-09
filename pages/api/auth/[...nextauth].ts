@@ -33,6 +33,7 @@ export default NextAuth({
             },
             async authorize(credentials) {
                 if (!credentials?.email || !credentials?.password) {
+                    console.log("Email & Password needed")
                     throw new Error('Email & Password needed')
                 }
 
@@ -43,12 +44,14 @@ export default NextAuth({
                 })
 
                 if (!user || !user.hashedPassword) {
+                    console.log("Email does not exist")
                     throw new Error('Email does not exist')
                 }
 
-                const isCorrectPassword = await compare(user.hashedPassword, credentials.password)
+                const isCorrectPassword = await compare(credentials.password, user.hashedPassword)              
 
                 if (!isCorrectPassword) {
+                    console.log("Incorrect Password")
                     throw new Error('Incorrect Password')
                 }
 

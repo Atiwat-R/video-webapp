@@ -2,14 +2,14 @@ import Input from "@/components/input"
 import axios from "axios"
 import { useCallback, useState } from "react"
 import { signIn } from "next-auth/react"
-import { useRouter } from "next/router"
+// import { useRouter } from "next/router"
 
 import { FcGoogle } from 'react-icons/fc'
 import { FaGithub } from 'react-icons/fa'
 
 const Auth = () => {
 
-    const router = useRouter()
+    // const router = useRouter()
 
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
@@ -27,14 +27,20 @@ const Auth = () => {
         await signIn('credentials', {
             email,
             password,
-            redirect: false,
-            callbackUrl: '/'
+            // redirect: false,
+            callbackUrl: '/profiles'
         }).then(() => {
-            router.push('/')
+            // router.push('/')
+            console.log("Login Success")
         }).catch((error) => {
             console.log(error)
         })
     },[email, password])
+
+    // Sign in using OAuth
+    const OAuthLogin = (service: string) => {
+        signIn(service, { callbackUrl: '/profiles' })
+    }
 
     // Register new user
     const register = useCallback(async () => {
@@ -84,10 +90,10 @@ const Auth = () => {
                     {variant == 'login' ? 'Login' : 'Sign up'}
                 </button>
                 <div className="flex flex-row items-center gap-4 mt-8 justify-center">
-                    <div onClick={() => signIn('google', { callbackUrl: '/' })} className="w-10 h-10 bg-white rounded-full flex items-center justify-center cursor-pointer hover:opacity-80 transition active:opacity-90">
+                    <div onClick={() => OAuthLogin('google')} className="w-10 h-10 bg-white rounded-full flex items-center justify-center cursor-pointer hover:opacity-80 transition active:opacity-90">
                         <FcGoogle size={32}/>
                     </div>
-                    <div onClick={() => signIn('github', { callbackUrl: '/' })} className="w-10 h-10 bg-white rounded-full flex items-center justify-center cursor-pointer hover:opacity-80 transition active:opacity-90">
+                    <div onClick={() => OAuthLogin('github')} className="w-10 h-10 bg-white rounded-full flex items-center justify-center cursor-pointer hover:opacity-80 transition active:opacity-90">
                         <FaGithub size={32}/>
                     </div>
                 </div>
