@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import serverAuth from '@/lib/serverAuth';
 
-// API Endpoint for fetching current user
+// Backend API Endpoint for fetching current user
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     try {
         // Check if request is GET

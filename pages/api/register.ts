@@ -2,7 +2,7 @@ import bcrypt from 'bcrypt';
 import { NextApiRequest, NextApiResponse } from 'next';
 import prismadb from "@/lib/prismadb"
 
-
+// Backend API Endpoint for posting newly registered user data into database
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     try {
         // Check if request is POST

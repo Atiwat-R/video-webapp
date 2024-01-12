@@ -1,6 +1,6 @@
 import useCurrentUser from "@/hooks/useCurrentUser"
 import { NextPageContext } from "next"
-import { signOut, getSession } from "next-auth/react"
+import { getSession } from "next-auth/react"
 import { useRouter } from "next/router"
 
 export async function getServerSideProps(context: NextPageContext) {
@@ -40,12 +40,10 @@ const Profiles = () => {
                                 {user?.name}
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
 
-            {/* <button onClick={() => signOut()} className='h-10 w-full bg-white'>Logout</button> */}
         </div>
     )
 }

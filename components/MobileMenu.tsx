@@ -1,3 +1,4 @@
+import { useRouter } from "next/router"
 import React from "react"
 
 interface MobileMenuItemProps {
@@ -7,6 +8,8 @@ interface MobileMenuItemProps {
 const MobileMenu: React.FC<MobileMenuItemProps> = ({ visible }) => {
 
     if (!visible) return null
+
+    const router = useRouter()
 
     return (
         <div className='bg-black w-56 absolute top-8 left-0 py-5 flex-col border-2 border-gray-500 flex'>
@@ -23,6 +26,9 @@ const MobileMenu: React.FC<MobileMenuItemProps> = ({ visible }) => {
                 </div>
                 <div className='px-3 text-center text-white hover:underline'>
                     Option
+                </div>
+                <div onClick={() => router.push('/upload')} className='px-3 text-center text-white hover:underline'>
+                    Upload
                 </div>
 
                 {/* TODO: Make MobileMenuItem */}

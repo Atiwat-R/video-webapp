@@ -5,7 +5,6 @@ import NavbarItem from "./NavbarItem"
 import AccountMenu from "./AccountMenu"
 
 const TOP_OFFSET = 66
-const NAVBAR_SHOW_TIMEOUT = 5000 // miliseconds (1000 ms = 1 sec)
 
 const Navbar = () => {
 
@@ -23,13 +22,8 @@ const Navbar = () => {
     useEffect(() => {
         const handleScroll = () => {
 
-            if (window.scrollY >= TOP_OFFSET) {
+            if (window.scrollY >= TOP_OFFSET) { // window.scrollY is position on the web page, not scroll speed
                 setShowBackground(true)
-
-                // No longer show background after NAVBAR_SHOW_TIMEOUT
-                setTimeout(() => {
-                    setShowBackground(false);
-                }, NAVBAR_SHOW_TIMEOUT);
             } else {
                 setShowBackground(false)
             }
@@ -47,6 +41,7 @@ const Navbar = () => {
                     <NavbarItem label='About' />
                     <NavbarItem label='Profile' />
                     <NavbarItem label='Option' />
+                    <NavbarItem label='Upload' route='/upload' />
                 </div>
                 <div onClick={toggleMobileMenu} className='lg:hidden flex-row items-center gap-2 ml-8 cursor-pointer relative'>
                     <p className='text-white text-sm'>Browse </p>
@@ -81,11 +76,11 @@ export default Navbar
 /*
 
 
-<div className=''>
-
-</div> 
-
-
+                // No longer show background after NAVBAR_SHOW_TIMEOUT
+                const NAVBAR_SHOW_TIMEOUT = 5000 // miliseconds (1000 ms = 1 sec)
+                setTimeout(() => {
+                    if (window.scrollY < TOP_OFFSET) setShowBackground(false);
+                }, NAVBAR_SHOW_TIMEOUT)
 
 
 */

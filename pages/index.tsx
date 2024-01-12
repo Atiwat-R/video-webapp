@@ -26,43 +26,25 @@ export default function Home() {
   const { data: user } = useCurrentUser()
 
   return (
-    <>
+    <div>
       <Navbar />
       
-      <div className='bg-gray-500' >
-        <div className='h-96' ></div>
-        <div className='h-96' ></div>
-        <div className='h-96' ></div>
-        <div className='h-96' ></div>
-        <div className='h-96' ></div>
-        <div className='h-96' ></div>
-        <div className='h-96' ></div>
-        <div className='h-96' ></div>
-        <div className='h-96' ></div>
-        <div className='h-96' ></div>
-        <div className='h-96' ></div>
-        <div className='h-96' ></div>
-        <div className='h-96' ></div>
-        <div className='h-96' ></div>
-        <div className='h-96' ></div>
-        <div className='h-96' ></div>
-        <div className='h-96' ></div>
-        <div className='h-96' ></div>
-        <div className='h-96' ></div>
-        <div className='h-96' ></div>
-        <div className='h-96' ></div>
-        <div className='h-96' ></div>
-        <div className='h-96' ></div>
-        <div className='h-96' ></div>
-        <div className='h-96' ></div>
-        <div className='h-96' ></div>
-        <div className='h-96' ></div>
-        
-      </div>
+
 
       
       
-    </>
+    </div>
   )
 }
 
+/*
+
+
+      <div className='bg-gray-500' >
+        <div className='h-96' ></div>
+        <div className='h-96' ></div>  
+      </div>
+
+
+
+ */
