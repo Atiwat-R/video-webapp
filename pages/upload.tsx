@@ -76,7 +76,15 @@ const Upload = () => {
         }
     }
 
-  
+    // For debug help purposes
+    // const debugFunction = async () => {
+    //     await axios.get("/api/random")
+    //     .then(() => {
+    //         console.log("Random Success")
+    //     }).catch((error) => {
+    //         console.log(error)
+    //     })
+    // }
 
     return (
         <div className='flex items-center h-full justify-center'>
