@@ -3,7 +3,7 @@ import prismadb from "@/lib/prismadb"
 import serverAuth from '@/lib/serverAuth';
 
 
-// Backend API Endpoint 
+// Backend API Endpoint for fetching one random Movie from database
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     try {
         // Check if request is GET
