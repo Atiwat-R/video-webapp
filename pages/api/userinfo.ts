@@ -15,7 +15,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         const userInfo = {
             "name": currentUser.name,
-            "email": currentUser.email
+            "email": currentUser.email,
+            "favoriteIds": currentUser.favoriteIds
         }
 
         return res.status(200).json(userInfo);

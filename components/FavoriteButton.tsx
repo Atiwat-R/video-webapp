@@ -13,7 +13,7 @@ interface FavoriteButtonProps {
 
 const FavoriteButton: React.FC<FavoriteButtonProps> = ({ movieId }) => {
 
-    // Obatin data from hooks
+    // Obtain data from hooks
     const { mutate: mutateFavorites } = useFavorites() // useFavorites().mutate -> mutateFavorites
     const { mutate: mutateCurrentUser, data: currentUser } = useCurrentUser() // useCurrentUser().mutate -> mutateCurrentUser && useCurrentUser().data -> currentUser 
 
@@ -27,19 +27,17 @@ const FavoriteButton: React.FC<FavoriteButtonProps> = ({ movieId }) => {
     const toggleFavorites = useCallback(async () => {
         let response
 
-        const currentUser = (await axios.get("/api/userinfo")).data
         const modifyFavoritesData = { 
             movieId: movieId, 
             currentUser: currentUser 
         }
 
-        // Update favorites in the Database
-        if (isFavorite) {
-            response = await axios.delete('/api/modifyfavorites', {
-                data: modifyFavoritesData 
-            })
-        } else {
+        if (!isFavorite) {
+            // Add to favorite list
             response = await axios.post('/api/modifyfavorites', modifyFavoritesData)
+        } else {
+            // Remove from favorite list
+            response = await axios.post('/api/unfavorite', modifyFavoritesData)
         }
 
         const newFavoriteIds = response?.data?.favoriteIds
@@ -50,9 +48,6 @@ const FavoriteButton: React.FC<FavoriteButtonProps> = ({ movieId }) => {
             favoriteIds: newFavoriteIds
         })
     }, [movieId, isFavorite, currentUser, mutateCurrentUser, mutateFavorites])
-
-
-
 
 
     // Icon for FavoriteButton. Will be computed to either <AiOutlineCheck/> or <AiOutlinePlus/>

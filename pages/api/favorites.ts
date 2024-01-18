@@ -9,16 +9,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         if (req.method !== 'GET') {
             return res.status(405).end(); // Error 405 Method Not Allowed
         }
-        const currentUser = (await serverAuth(req)).currentUser
+        const { currentUser } = await serverAuth(req)
 
         // From DB of movies, fetch only movies whose ID is in user's favoriteIds list
-        const favoritesList = prismadb.movie.findMany({
+        const favoritesList = await prismadb.movie.findMany({
             where: {
                 id: {
                     in: currentUser?.favoriteIds
                 }
             }
         })
+        
         return res.status(200).json(favoritesList);
 
     } catch (error) {
