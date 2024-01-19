@@ -1,9 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { without } from 'lodash'
 import prismadb from "@/lib/prismadb"
-import serverAuth from '@/lib/serverAuth';
 
-// Backend API Endpoint removing favorite movie
+// Backend API Endpoint for adding a movie to favorites list
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     try {
 
@@ -12,7 +10,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             return res.status(405).end(); // Error 405 Method Not Allowed
         }
 
+        // Find movie to be added
         const { movieId, currentUser } = req.body
+
+        console.log(movieId)
 
         const existingMovie = await prismadb.movie.findUnique({
             where: {
@@ -21,19 +22,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         })
         if (!existingMovie) throw new Error("ID doesn't exist")
 
-        // Create new favorite list
-        const newFavoriteIds = without(currentUser.favoriteIds, movieId)
-
-        // Replace User's old favoriteIds list with new one
-        const updatedUser = await prismadb.user.update({
+        const user = await prismadb.user.update({
             where: {
                 email: currentUser.email || ''
             },
             data: {
-                favoriteIds: newFavoriteIds
+                favoriteIds: {
+                    push: movieId
+                }
             }
         })
-        return res.status(200).json(updatedUser)
+        return res.status(200).json(user);
+        
 
     } catch (error) {
         console.log(error)

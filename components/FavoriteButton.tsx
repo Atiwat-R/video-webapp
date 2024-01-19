@@ -33,11 +33,11 @@ const FavoriteButton: React.FC<FavoriteButtonProps> = ({ movieId }) => {
         }
 
         if (!isFavorite) {
-            // Add to favorite list
-            response = await axios.post('/api/modifyfavorites', modifyFavoritesData)
+            // Add movieId to favorite list
+            response = await axios.post('/api/favorites/add', modifyFavoritesData)
         } else {
-            // Remove from favorite list
-            response = await axios.post('/api/unfavorite', modifyFavoritesData)
+            // Remove movieId from favorite list
+            response = await axios.post('/api/favorites/remove', modifyFavoritesData)
         }
 
         const newFavoriteIds = response?.data?.favoriteIds

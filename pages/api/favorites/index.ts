@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import prismadb from "@/lib/prismadb"
 import serverAuth from '@/lib/serverAuth';
 
-// Backend API Endpoint for fetching movies whose ID is in user's favoriteIds list
+// Backend API Endpoint for fetching Favorite movies ( whose ID is in user's favoriteIds list )
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     try {
         // Check if request is GET
