@@ -13,8 +13,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         // Find movie to be added
         const { movieId, currentUser } = req.body
 
-        console.log(movieId)
-
         const existingMovie = await prismadb.movie.findUnique({
             where: {
                 id: movieId
