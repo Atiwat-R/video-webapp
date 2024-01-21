@@ -7,6 +7,7 @@ import useMovieList from "@/hooks/useMovieList"
 import { NextPageContext } from "next"
 import { getSession } from "next-auth/react"
 import useInfoModal from "@/hooks/useInfoModal"
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 export async function getServerSideProps(context: NextPageContext) {
   const session = await getSession(context)
@@ -40,6 +41,7 @@ export default function Home() {
       <div className="pb-40">
         <MovieList title="Trending" data={movieList} />
         <MovieList title="Favorites" data={favoritesList} />
+        <SpeedInsights />
       </div>
       
     </div>
