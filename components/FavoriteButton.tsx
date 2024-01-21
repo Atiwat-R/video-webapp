@@ -47,7 +47,7 @@ const FavoriteButton: React.FC<FavoriteButtonProps> = ({ movieId }) => {
             ...currentUser,
             favoriteIds: newFavoriteIds
         })
-    }, [movieId, isFavorite, currentUser, mutateCurrentUser, mutateFavorites])
+    }, [movieId, isFavorite, currentUser, mutateCurrentUser]) // mutateFavorites
 
     mutateFavorites()
 

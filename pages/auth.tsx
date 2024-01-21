@@ -12,7 +12,7 @@ const Auth = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
 
-    const [variant, setVariant] = useState('login') // value for switch between login & register
+    const [variant, setVariant] = useState("login") // value for switch between login & register
 
     const toggleVariant = useCallback(() => {
         let newVal = (currentVariant: any) => currentVariant == "login" ? "register" : "login"
@@ -48,7 +48,7 @@ const Auth = () => {
         }).catch((error) => {
             console.log(error)
         })
-    },[name, email, password])
+    },[name, email, password, login])
 
     return (
         <div className='flex justify-center'>

@@ -12,10 +12,10 @@ interface MovieCardProps {
 
 const MovieCard: React.FC<MovieCardProps> = ({ data }) => {
 
-    if (isEmpty(data)) return null
-
     const router = useRouter()
     const { openModal } = useInfoModal()
+
+    if (isEmpty(data)) return null
 
     return (
         <div className="group bg-zinc-900 col-span relative h-[12vw]">
