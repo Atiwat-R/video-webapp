@@ -2,6 +2,9 @@
 
 A Web Application for watching movies and videos. Furnished with authentication system, React frontend UI, MongoDB database, and more.
 
+Vercel deployed site:
+- video-webapp-replm7n0q-atiwat-rs-projects.vercel.app
+
 Use:
 - React
 - TypeScript
@@ -26,8 +29,5 @@ Run (debug):
 - Create .env file with completed environment variables
 - npm install
 - npm run dev
-
-Deployed Link:
-- Vercel (Coming Soon)
 
 Web App created roughly based on https://www.youtube.com/watch?v=mqUN4N2q4qY
