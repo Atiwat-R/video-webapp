@@ -8,14 +8,14 @@ Vercel deployed site:
 Use:
 - React
 - TypeScript
-- NEXT
-- NEXT API (Backend & API)
+- NEXT.js
+- NEXT.js API (Backend & API)
 - Tailwind CSS
 - NextAuth (Authentication)
 - MongoDB (Database)
 - Prisma (ORM for database)
 - Vercel (Deployment)
-- Upstash (Redis Server-side Caching)
+- Redis (Server-side Caching)
 
 Environment Variables (.env):
 - DATABASE_URL=
@@ -25,13 +25,11 @@ Environment Variables (.env):
 - GITHUB_SECRET=
 - GOOGLE_CLIENT_ID=
 - GOOGLE_CLIENT_SECRET=
-- UPSTASH_REDIS_URL=""
-- UPSTASH_REDIS_TOKEN=""
+- REDIS_URL="rediss://default:< PASSWORD >@< ENDPOINT >:< PORT >"
 
 
-Run (debug):
+Run locally:
 - Create .env file with completed environment variables
 - npm install
 - npm run dev
 
-Web App created roughly based on https://www.youtube.com/watch?v=mqUN4N2q4qY

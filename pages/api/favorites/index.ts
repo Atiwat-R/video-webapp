@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import prismadb from "@/lib/prismadb"
 import serverAuth from '@/lib/serverAuth';
-import redis from '../redis/redis';
+import redis from '@/lib/redis';
 
 const REDIS_CACHE_EXPIRATION = 600 // 600 sec / 10 minutes
 
@@ -17,7 +17,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         // Return Redis Cache'd data, if exists
         let cache = await redis.get("favorites");
         if (cache) {
-            return res.status(200).json(cache);
+            return res.status(200).json(JSON.parse(cache));
         }
     
         // No Redis cache, pull data from DB
@@ -31,9 +31,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         })
 
         // Upload data onto Redis
-        redis.set("favorites", JSON.stringify(favoritesList), {
-            ex: REDIS_CACHE_EXPIRATION // Cache expires
-        });
+        await redis.set("favorites", JSON.stringify(favoritesList), 'EX', REDIS_CACHE_EXPIRATION);
         
         return res.status(200).json(favoritesList);
 

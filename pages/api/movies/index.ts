@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import serverAuth from '@/lib/serverAuth';
 import prismadb from "@/lib/prismadb"
-import redis from '../redis/redis';
+import redis from '@/lib/redis';
 
 const REDIS_CACHE_EXPIRATION = 600 // 600 sec / 10 minutes
 
@@ -19,7 +19,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         // Return Redis Cache'd data, if exists
         let cache = await redis.get("movies");
         if (cache) {
-            return res.status(200).json(cache);
+            return res.status(200).json(JSON.parse(cache));
         }
 
         // No Redis cache, proceed to pull data from MongoDB
@@ -27,9 +27,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const movies = await prismadb.movie.findMany()
 
         // Upload data onto Redis
-        redis.set("movies", JSON.stringify(movies), {
-             ex: REDIS_CACHE_EXPIRATION // Cache expires
-        });
+        await redis.set("movies", JSON.stringify(movies), 'EX', REDIS_CACHE_EXPIRATION);
 
         return res.status(200).json(movies);
 

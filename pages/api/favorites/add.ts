@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import prismadb from "@/lib/prismadb"
-import redis from '../redis/redis';
+import redis from '@/lib/redis';
 
 // Backend API Endpoint for adding a movie to favorites list
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -33,7 +33,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         })
 
         // Delete old cache from Redis, to pave way for the new
-        let deleteCache = await redis.del("favorites");
+        await redis.del("favorites");
 
         return res.status(200).json(user);
         

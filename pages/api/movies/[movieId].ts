@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import serverAuth from '@/lib/serverAuth';
 import prismadb from "@/lib/prismadb"
-import redis from '../redis/redis';
+import redis from '@/lib/redis';
 
 // If [ movieId = 5678 ] this file will have path [ /api/movies/5678 ]
 
@@ -24,7 +24,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         // Return Redis Cache'd data, if exists
         let cache = await redis.get("movieId_" + movieId); // Redis Key Ex. movieId_5678 
         if (cache) {
-            return res.status(200).json(cache);
+            return res.status(200).json(JSON.parse(cache));
         }
 
         // No Redis cache, pull data from DB
@@ -36,9 +36,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         if (!movieData) throw new Error("Invalid Movie ID")
 
         // Upload data onto Redis
-        redis.set("movieId_" + movieId, JSON.stringify(movieData), {
-            ex: REDIS_CACHE_EXPIRATION // Cache expires
-        });
+        await redis.set("movieId_" + movieId, JSON.stringify(movieData), 'EX', REDIS_CACHE_EXPIRATION);
 
         return res.status(200).json(movieData);
     } catch (error) {
