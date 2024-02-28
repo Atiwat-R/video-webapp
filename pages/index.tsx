@@ -41,7 +41,7 @@ export default function Home() {
       <div className="pb-40">
         <MovieList title="Trending" data={movieList} />
         <MovieList title="Favorites" data={favoritesList} />
-        <SpeedInsights />
+        {/* <SpeedInsights /> */} 
       </div>
       
     </div>

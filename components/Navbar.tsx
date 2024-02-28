@@ -41,7 +41,7 @@ const Navbar = () => {
                     <NavbarItem label='About' />
                     <NavbarItem label='Profile' />
                     <NavbarItem label='Option' />
-                    <NavbarItem label='Upload' route='/upload' />
+                    <NavbarItem label='Upload' route='/upload' /> 
                 </div>
                 <div onClick={toggleMobileMenu} className='lg:hidden flex-row items-center gap-2 ml-8 cursor-pointer relative'>
                     <p className='text-white text-sm'>Browse </p>

@@ -15,6 +15,7 @@ Use:
 - MongoDB (Database)
 - Prisma (ORM for database)
 - Vercel (Deployment)
+- Upstash (Redis Server-side Caching)
 
 Environment Variables (.env):
 - DATABASE_URL=
@@ -24,6 +25,9 @@ Environment Variables (.env):
 - GITHUB_SECRET=
 - GOOGLE_CLIENT_ID=
 - GOOGLE_CLIENT_SECRET=
+- UPSTASH_REDIS_URL=""
+- UPSTASH_REDIS_TOKEN=""
+
 
 Run (debug):
 - Create .env file with completed environment variables
