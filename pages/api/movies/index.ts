@@ -3,7 +3,7 @@ import serverAuth from '@/lib/serverAuth';
 import prismadb from "@/lib/prismadb"
 import redis from '../redis/redis';
 
-const REDIS_CACHE_EXPIRATION = 60 // 60 seconds
+const REDIS_CACHE_EXPIRATION = 600 // 600 sec / 10 minutes
 
 // Backend API Endpoint for fetching ALL Movie in the table
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
