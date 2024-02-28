@@ -3,7 +3,7 @@ import serverAuth from '@/lib/serverAuth';
 import prismadb from "@/lib/prismadb"
 import redis from '../redis/redis';
 
-const REDIS_CACHE_EXPIRATION = 60 // in seconds
+const REDIS_CACHE_EXPIRATION = 60 // 60 seconds
 
 // Backend API Endpoint for fetching ALL Movie in the table
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -28,7 +28,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         // Upload data onto Redis
         redis.set("movies", JSON.stringify(movies), {
-             ex: REDIS_CACHE_EXPIRATION // Cache expires in 60 seconds
+             ex: REDIS_CACHE_EXPIRATION // Cache expires
         });
 
         return res.status(200).json(movies);
