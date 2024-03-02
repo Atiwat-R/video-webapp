@@ -17,6 +17,7 @@ Use:
 - Prisma (ORM for database)
 - Vercel (Deployment)
 - Redis (Server-side Caching)
+- Jest & RTL (Unit Testing)
 
 Environment Variables (.env):
 - DATABASE_URL=
