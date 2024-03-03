@@ -11,7 +11,7 @@ const NavbarItem: React.FC<NavbarItemProps> = ({ label , route }) => {
     const router = useRouter()
 
     return (
-        <div onClick={() => router.push(route || '/')} className='text-white cursor-pointer hover:text-gray-300 transition'>
+        <div data-testid="navbar-item" onClick={() => router.push(route || '/')} className='text-white cursor-pointer hover:text-gray-300 transition'>
             {label}
         </div>
     )

@@ -29,6 +29,8 @@ describe("NavbarItem", () => {
             route={ item.route }
         />)
         let textElement = getByText( item.label )
+          
+
         expect(textElement).toBeInTheDocument()
       })
     })

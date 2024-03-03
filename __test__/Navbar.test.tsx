@@ -11,26 +11,59 @@ jest.mock('next/router', () => ({
 
 describe("Navbar", () => {
 
-    const mockData = [
-        { label: 'Home', route: '/' },
-        { label: 'About', route: '/' },
-        { label: 'Trending', route: '/' },
-        { label: 'Pages', route: '/' },
-        { label: 'Clickables', route: '/' },
-        { label: 'Upload', route: '/upload' },
-        { label: 'UploadVideos', route: '/upload' },
-    ];
 
     // Tests
 
-
     it("Renders correctly", () => {
+        const { getByText, getByTestId } = render(<Navbar />)
 
-        const { getByText } = render(<Navbar />)
-        let textElement = getByText( 'Home' )
+        // Component renders
+        const navbar = getByTestId('navbar')
+        expect(navbar).toBeInTheDocument()
+
+        // Text renders
+        const textElement = getByText( 'Home' )
         expect(textElement).toBeInTheDocument()
-
     })
+
+    it('Should toggle mobile menu visibility when clicked', () => {
+        const { getByText, getByTestId } = render(<Navbar />);
+
+        // Click Browse, show MobileMenu
+        const browseButton = getByText('Browse');
+        fireEvent.click(browseButton);
+    
+        // Test if MobileMenu renders
+        const mobileMenu = getByTestId('mobile-menu');
+        expect(mobileMenu).toBeInTheDocument();
+    
+        // Close it, MobileMenu should be gone
+        fireEvent.click(browseButton);
+        expect(mobileMenu).not.toBeInTheDocument();
+    });
+
+    it('Default background when not scrolling', () => {
+        const { container } = render(<Navbar />);
+        const navbar = container.firstChild?.firstChild; // Background-changing code is in the second layer
+
+        // This code portion change background, should not be in className when not scrolling
+        expect(navbar).not.toHaveClass('bg-zinc-900 bg-opacity-90');
+    })
+    
+    it('Change background when scrolling', () => {
+        const { container } = render(<Navbar />);
+        const navbar = container.firstChild?.firstChild; // Background-changing code is in the second layer
+    
+        // Simulate scrolling past the defined TOP_OFFSET
+        window.scrollY = 100;
+        fireEvent(window, new Event('scroll'));
+        expect(navbar).toHaveClass('bg-zinc-900 bg-opacity-90');
+    
+        // Simulate scrolling back to the top
+        window.scrollY = 0;
+        fireEvent(window, new Event('scroll'));
+        expect(navbar).not.toHaveClass('bg-zinc-900 bg-opacity-90');
+    });
 
 
 
