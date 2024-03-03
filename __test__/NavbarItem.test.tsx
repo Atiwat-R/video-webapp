@@ -10,70 +10,70 @@ jest.mock('next/router', () => ({
 
 describe("NavbarItem", () => {
 
-  const mockData = [
-      { label: 'Home', route: '/' },
-      { label: 'About', route: '/' },
-      { label: 'Trending', route: '/' },
-      { label: 'Pages', route: '/' },
-      { label: 'Clickables', route: '/' },
-      { label: 'Upload', route: '/upload' },
-      { label: 'UploadVideos', route: '/upload' },
-  ];
+    const mockData = [
+        { label: 'Home', route: '/' },
+        { label: 'About', route: '/' },
+        { label: 'Trending', route: '/' },
+        { label: 'Pages', route: '/' },
+        { label: 'Clickables', route: '/' },
+        { label: 'Upload', route: '/upload' },
+        { label: 'UploadVideos', route: '/upload' },
+    ];
 
-  // Tests
+    // Tests
 
-  it("Renders correctly", () => {
-    mockData.forEach((item) => {
-      const { getByText } = render(<NavbarItem 
-          label={ item.label }
-          route={ item.route }
-      />)
-      let textElement = getByText( item.label )
-      expect(textElement).toBeInTheDocument()
+    it("Renders correctly", () => {
+        mockData.forEach((item) => {
+        const { getByText } = render(<NavbarItem 
+            label={ item.label }
+            route={ item.route }
+        />)
+        let textElement = getByText( item.label )
+        expect(textElement).toBeInTheDocument()
+      })
     })
-  })
 
-  it('Navigate to the specified route when clicked', () => {
-    mockData.forEach((item) => {
-      const pushMock = jest.fn(); // Mock func to mock router.push
+    it('Navigate to the specified route when clicked', () => {
+        mockData.forEach((item) => {
+        const pushMock = jest.fn(); // Mock func to mock router.push
 
-      const useRouterMock = jest.spyOn(require('next/router'), 'useRouter').mockReturnValue({
-        push: pushMock,
-      });
+        const useRouterMock = jest.spyOn(require('next/router'), 'useRouter').mockReturnValue({
+          push: pushMock,
+        });
 
-      // Render in virtual DOM 
-      const { getByText } = render(<NavbarItem label={item.label} route={item.route} />);
+        // Render in virtual DOM 
+        const { getByText } = render(<NavbarItem label={item.label} route={item.route} />);
 
-      // simulate clicking
-      const toClick = getByText(item.label);
-      fireEvent.click(toClick); 
-  
-      // Assert
-      expect(pushMock).toHaveBeenCalledWith(item.route);
-      useRouterMock.mockRestore();
-    })
-  });
+        // simulate clicking
+        const toClick = getByText(item.label);
+        fireEvent.click(toClick); 
+    
+        // Assert
+        expect(pushMock).toHaveBeenCalledWith(item.route);
+        useRouterMock.mockRestore();
+      })
+    });
 
-  it('Navigate to default route when route is not specified', () => {
-    mockData.forEach((item) => {
-      const pushMock = jest.fn(); // Mock func to mock router.push
+    it('Navigate to default route when route is not specified', () => {
+        mockData.forEach((item) => {
+        const pushMock = jest.fn(); // Mock func to mock router.push
 
-      const useRouterMock = jest.spyOn(require('next/router'), 'useRouter').mockReturnValue({
-        push: pushMock,
-      });
+        const useRouterMock = jest.spyOn(require('next/router'), 'useRouter').mockReturnValue({
+          push: pushMock,
+        });
 
-      // Render in virtual DOM 
-      const { getByText } = render(<NavbarItem label={item.label} />);
+        // Render in virtual DOM 
+        const { getByText } = render(<NavbarItem label={item.label} />);
 
-      // simulate clicking
-      const toClick = getByText(item.label);
-      fireEvent.click(toClick); 
-  
-      // Assert
-      expect(pushMock).toHaveBeenCalledWith('/');
-      useRouterMock.mockRestore();
-    })
-  });
+        // simulate clicking
+        const toClick = getByText(item.label);
+        fireEvent.click(toClick); 
+    
+        // Assert
+        expect(pushMock).toHaveBeenCalledWith('/');
+        useRouterMock.mockRestore();
+      })
+    });
 
   })
 
