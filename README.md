@@ -14,10 +14,10 @@ Use:
 - Tailwind CSS
 - NextAuth (Authentication)
 - MongoDB (Database)
-- Prisma (ORM for database)
+- Prisma (ORM for Database)
 - Vercel (Deployment)
 - Redis (Server-side Caching)
-- Jest & RTL (Unit Testing)
+- Jest & React Testing Library (Unit Testing)
 
 Environment Variables (.env):
 - DATABASE_URL=

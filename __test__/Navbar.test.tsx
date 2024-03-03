@@ -42,6 +42,22 @@ describe("Navbar", () => {
         expect(mobileMenu).not.toBeInTheDocument();
     });
 
+    it('Should toggle account menu visibility when clicked', () => {
+      const { getByTestId } = render(<Navbar />);
+
+      // Click and open AccountMenu
+      const accountMenuButton = getByTestId('account-menu-button');
+      fireEvent.click(accountMenuButton);
+  
+      // Test if it renders
+      const accountMenu = getByTestId('account-menu');
+      expect(accountMenu).toBeInTheDocument();
+  
+      // Click to close, should disappear
+      fireEvent.click(accountMenuButton);
+      expect(accountMenu).not.toBeInTheDocument();
+    });
+
     it('Default background when not scrolling', () => {
         const { container } = render(<Navbar />);
         const navbar = container.firstChild?.firstChild; // Background-changing code is in the second layer

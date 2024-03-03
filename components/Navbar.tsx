@@ -48,7 +48,7 @@ const Navbar = () => {
                     <BsChevronDown className={`w-4 text-white fill-white transition ${showMobileMenu ? 'rotate-180' : 'rotate-0'}`} /> {/** Use backticks ` instead of quotation marks ' or " */}
                     <MobileMenu visible={showMobileMenu} />
                 </div>
-                <div onClick={toggleShowAccountMenu} className='flex flex-row ml-auto gap-7 items-center '>
+                <div onClick={toggleShowAccountMenu} data-testid="account-menu-button" className='flex flex-row ml-auto gap-7 items-center '>
                     <div className='text-gray-200 hover:text-gray-300 cursor-pointer transition'>
                         <BsSearch />
                     </div>
