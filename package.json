@@ -45,6 +45,7 @@
     "@types/react-dom": "latest",
     "autoprefixer": "latest",
     "babel-jest": "^29.7.0",
+    "cypress": "^13.6.6",
     "eslint": "latest",
     "eslint-config-next": "latest",
     "eslint-plugin-jest-dom": "^5.1.0",
