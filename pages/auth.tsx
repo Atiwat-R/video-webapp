@@ -85,10 +85,10 @@ const Auth = () => {
                     {variant == 'login' ? 'Login' : 'Sign up'}
                 </button>
                 <div className="flex flex-row items-center gap-4 mt-8 justify-center">
-                    <div onClick={() => oAuthLogin('google')} className="w-10 h-10 bg-white rounded-full flex items-center justify-center cursor-pointer hover:opacity-80 transition active:opacity-90">
+                    <div id='oauth-google' onClick={() => oAuthLogin('google')} className="w-10 h-10 bg-white rounded-full flex items-center justify-center cursor-pointer hover:opacity-80 transition active:opacity-90">
                         <FcGoogle size={32}/>
                     </div>
-                    <div onClick={() => oAuthLogin('github')} className="w-10 h-10 bg-white rounded-full flex items-center justify-center cursor-pointer hover:opacity-80 transition active:opacity-90">
+                    <div id='oauth-github' onClick={() => oAuthLogin('github')} className="w-10 h-10 bg-white rounded-full flex items-center justify-center cursor-pointer hover:opacity-80 transition active:opacity-90">
                         <FaGithub size={32}/>
                     </div>
                 </div>

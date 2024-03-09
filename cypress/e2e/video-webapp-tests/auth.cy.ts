@@ -9,7 +9,7 @@ describe('Auth Page', () => {
     }
 
     beforeEach(() => {
-        cy.visit('https://video-webapp-5emfb3zok-atiwat-rs-projects.vercel.app/')
+        cy.visit('http://localhost:3000/')
         cy.url().should('include', '/auth'); // Should start at Auth page
     })
   
@@ -85,6 +85,26 @@ describe('Auth Page', () => {
         cy.url().should('include', '/profiles')
     })
 
+    it.only('Sign in with Github OAuth', () => {
+
+        cy.get('[id=oauth-github]')
+        .should('be.visible')
+        .click()
+
+        // cy.url().should('include', '/github'); 
+
+    })
+
+    it('Sign in with Google OAuth', () => {
+
+        cy.get('[id=oauth-google]')
+        .should('be.visible')
+        .click()
+
+        // TODO: google oauth
+        // https://docs.cypress.io/guides/end-to-end-testing/google-authentication
+    })
+
 
 })
 
@@ -93,18 +113,5 @@ describe('Auth Page', () => {
 
 
 
-    // it.only('Sign in with Github OAuth', () => {
 
-    //     cy.get('.flex.flex-row.items-center.gap-4.mt-8.justify-center')
-    //     .should('exist') // Asserts that the parent container exists
-    //     .within(() => {
-    //         // // Asserts that the Google button exists
-    //         // cy.get('div[onClick*="oAuthLogin(\'google\')"]').should('exist');
-    //         // // Asserts that the GitHub button exists
-    //         // cy.get('div[onClick*="oAuthLogin(\'github\')"]').should('exist');
-    //     });
-
-    //     // Check if redirected to the profile page after successful OAuth login
-    //     cy.url().should('include', '/profiles');
-    // })
   

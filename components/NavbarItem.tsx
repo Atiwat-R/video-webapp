@@ -13,7 +13,7 @@ const NavbarItem: React.FC<NavbarItemProps> = ({ label , route , customClassName
     const defaultClassName = 'text-white cursor-pointer hover:text-gray-300 transition'
 
     return (
-        <div data-testid="navbar-item" onClick={() => router.push(route || '/')} className={customClassName || defaultClassName}>
+        <div id="navbar-item" data-testid="navbar-item" onClick={() => router.push(route || '/')} className={customClassName || defaultClassName}>
             {label}
         </div>
     )

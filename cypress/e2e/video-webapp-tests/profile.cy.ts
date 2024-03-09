@@ -10,7 +10,7 @@ describe('Profile Page', () => {
     }
 
     beforeEach(() => {
-        cy.visit('https://video-webapp-5emfb3zok-atiwat-rs-projects.vercel.app/')
+        cy.visit('http://localhost:3000/')
 
         // Login
         cy.get('[id=email]').type(`${testAcc.email}`)
