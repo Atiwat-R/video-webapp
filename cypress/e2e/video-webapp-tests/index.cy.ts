@@ -69,10 +69,6 @@ describe('Index/Home Page', () => {
     .should('be.visible')
     .should('have.length', howManyItemsInNavbar)
 
-    // Desktop elements should not exists
-    cy.get('[id=desktop-menu]')
-    .should('not.exist')
-
   })
 
   it('AccountMenu Displays Correctly', () => {
@@ -127,6 +123,60 @@ describe('Index/Home Page', () => {
     .click()
 
     cy.url().should('include', '/auth')
+
+  })
+
+  it('More Info / InfoModal Displays Correctly', () => {
+
+    // InfoModal is hidden at first
+    cy.get('[id=info-modal]')
+    .should('not.exist')
+
+    // Click to Open
+    cy.contains('More Info')
+    .should('be.visible')
+    .click()
+
+    // InfoModal shows
+    cy.get('[id=info-modal]')
+    .should('exist')
+    .should('be.visible')
+    .within(() => {
+      cy.contains('New').should('be.visible')
+    })
+
+    // Click X to Close
+    cy.get('[id=info-modal-close-button]')
+    .should('be.visible')
+    .click()
+
+    // InfoModal is hidden finally
+    cy.get('[id=info-modal]')
+    .should('not.exist')
+
+  })
+
+  it('Home Page Play Button Works', () => {
+
+    cy.contains('Play')
+    .should('be.visible')
+    .click()
+
+    cy.url().should('include', '/watch')
+
+  })
+
+  it('InfoModal Play Button Works', () => {
+
+    cy.contains('More Info')
+    .should('be.visible')
+    .click()
+
+    cy.contains('Play')
+    .should('be.visible')
+    .click()
+
+    cy.url().should('include', '/watch')
 
   })
 

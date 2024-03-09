@@ -32,7 +32,7 @@ const InfoModal: React.FC<InfoModalProps> = ({ visible, onClose }) => {
     if (!visible) return null
 
     return (
-        <div className="z-50 transition duration-300 bg-black bg-opacity-80 flex justify-center items-center overflow-x-hidden overflow-y-auto fixed inset-0">
+        <div id='info-modal' className="z-50 transition duration-300 bg-black bg-opacity-80 flex justify-center items-center overflow-x-hidden overflow-y-auto fixed inset-0">
             <div className="relative w-auto mx-auto max-w-3xl rounded-md overflow-hidden ">
                 <div className={`${isVisible ? "scale-100" : "scale-0"} transform duration-300 relative flex-auto bg-zinc-900 drop-shadow-md`}>
                     <div className="relative h-96">
@@ -45,7 +45,7 @@ const InfoModal: React.FC<InfoModalProps> = ({ visible, onClose }) => {
                             className="w-full brightness-[60%] object-cover h-full"
                         >
                         </video>
-                        <div onClick={handleClose} className="cursor-pointer absolute top-3 right-3 h-10 w-10 rounded-full bg-black bg-opacity-70 flex items-center justify-center hover:bg-neutral-700">
+                        <div id='info-modal-close-button' onClick={handleClose} className="cursor-pointer absolute top-3 right-3 h-10 w-10 rounded-full bg-black bg-opacity-70 flex items-center justify-center hover:bg-neutral-700">
                             <AiOutlineClose className="text-white" size={20} />
                         </div>
                         <div className="absolute bottom-[10%] left-10">
