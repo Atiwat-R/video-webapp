@@ -29,7 +29,10 @@ describe('Index/Home Page', () => {
 
   it('Displays Correctly', () => {
 
+    cy.contains('Browse').should('be.visible')
 
+    cy.get('#navbar').should('be.visible')
+    cy.viewport(320, 480)
 
   })
 

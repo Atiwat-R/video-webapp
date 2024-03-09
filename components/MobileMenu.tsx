@@ -1,5 +1,5 @@
-import { useRouter } from "next/router"
 import React from "react"
+import NavbarItem from "./NavbarItem"
 
 interface MobileMenuItemProps {
     visible?: boolean
@@ -7,36 +7,20 @@ interface MobileMenuItemProps {
 
 const MobileMenu: React.FC<MobileMenuItemProps> = ({ visible }) => {
 
-    const router = useRouter()
-
     if (!visible) return null
+    const itemClassName = 'px-3 text-center text-white hover:underline'
 
     return (
         <div data-testid="mobile-menu" className='bg-black w-56 absolute top-8 left-0 py-5 flex-col border-2 border-gray-500 flex'>
             <div className='flex flex-col gap-4'>
-
-                <div className='px-3 text-center text-white hover:underline'>
-                    Home
-                </div>
-                <div className='px-3 text-center text-white hover:underline'>
-                    About
-                </div>
-                <div className='px-3 text-center text-white hover:underline'>
-                    Profile
-                </div>
-                <div className='px-3 text-center text-white hover:underline'>
-                    Option
-                </div>
-                <div onClick={() => router.push('/upload')} className='px-3 text-center text-white hover:underline'>
-                    Upload
-                </div>
-
-                {/* TODO: Make MobileMenuItem */}
-
+                    <NavbarItem label='Home' customClassName={itemClassName} />
+                    <NavbarItem label='About' customClassName={itemClassName} />
+                    <NavbarItem label='Profile' customClassName={itemClassName} />
+                    <NavbarItem label='Option' customClassName={itemClassName} />
+                    <NavbarItem label='Upload' customClassName={itemClassName} route='/upload' /> 
             </div>
         </div>
     )
 }
-
 
 export default MobileMenu
