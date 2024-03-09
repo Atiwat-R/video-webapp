@@ -7,17 +7,25 @@ Vercel deployed site:
 
 
 Use:
-- React
-- TypeScript
-- NEXT.js
-- NEXT.js API (Backend & API)
-- Tailwind CSS
-- NextAuth (Authentication)
-- MongoDB (Database)
-- Prisma (ORM for Database)
-- Vercel (Deployment)
-- Redis (Server-side Caching)
-- Jest & React Testing Library (Unit Testing)
+- Frontend
+    - React
+    - TypeScript
+    - NEXT.js
+    - Tailwind CSS
+- Backend
+    - NEXT.js API
+    - NextAuth (Authentication)
+    - Redis (Server-side Caching)
+- Database
+    - MongoDB
+    - Prisma (ORM for Database)
+- Deployment
+    - Vercel
+- Testing
+    - Jest (Unit Testing)
+    - React Testing Library (Unit Testing)
+    - Cypress (End-to-End Testing)
+
 
 Environment Variables (.env):
 - DATABASE_URL=
