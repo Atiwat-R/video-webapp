@@ -34,8 +34,9 @@ describe('Index/Home Page', () => {
 
 
 
-  it('Desktop Screen Displays Correctly', () => {
-    cy.viewport(1536, 864)
+  it('Desktop Navbar Displays Correctly', () => {
+
+    cy.viewport(1536, 864) // Use Desktop screen size
 
     cy.get('#navbar #navbar-item')
     .should('be.visible')
@@ -43,11 +44,18 @@ describe('Index/Home Page', () => {
     cy.get('#navbar #navbar-item')
     .should('exist')
     .should('have.length', howManyItemsInNavbar)
+
+    cy.get('[id=desktop-menu]')
+    .should('exist')
+
+    // Mobile elements should not exists
+    cy.get('[id=mobile-menu]')
+    .should('not.exist')
   })
 
-  it('Mobile Screen Displays Correctly', () => {
+  it('Mobile Navbar Displays Correctly', () => {
 
-    cy.viewport(750, 1334)
+    cy.viewport(750, 1334) // Use Mobile screen size
 
     cy.contains('Browse')
     .should('be.visible')
@@ -61,10 +69,65 @@ describe('Index/Home Page', () => {
     .should('be.visible')
     .should('have.length', howManyItemsInNavbar)
 
+    // Desktop elements should not exists
+    cy.get('[id=desktop-menu]')
+    .should('not.exist')
+
   })
 
+  it('AccountMenu Displays Correctly', () => {
 
+    // AccountMenu is hidden at first
+    cy.get('[id=account-menu]')
+    .should('not.exist')
 
+    // Click to Open
+    cy.get('[id=account-menu-button]')
+    .should('be.visible')
+    .click()
 
+    // AccountMenu shows
+    cy.get('[id=account-menu]')
+    .should('exist')
+    .should('be.visible')
+    .within(() => {
+      // There's user's name
+      cy.contains(`${testAcc.name}`)
+      .should('be.visible')
+
+      // There's an img
+      cy.get('img')
+      .should('be.visible')
+      .should('have.attr', 'src')
+
+      // There's Sign Out button
+      cy.contains('Sign Out')
+      .should('exist')
+      .should('be.visible')
+    })
+
+    // Click to Close
+    cy.get('[id=account-menu-button]')
+    .click()
+
+    // AccountMenu is hidden in the end
+    cy.get('[id=account-menu]')
+    .should('not.exist')
+
+  })
+
+  it('Sign Out Button Works', () => {
+
+    cy.get('[id=account-menu-button]')
+    .should('exist')
+    .click()
+
+    cy.contains('Sign Out')
+    .should('be.visible')
+    .click()
+
+    cy.url().should('include', '/auth')
+
+  })
 
 })

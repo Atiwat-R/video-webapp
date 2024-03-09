@@ -43,11 +43,15 @@ describe('Profile Page', () => {
 
       it('User Profile Leads to Home Page', () => {
 
+        cy.get('.w-44 img')
+        .should('be.visible')
+        .should('have.attr', 'src')
+
         // Click user profile
         cy.get('.w-44 img')
         .should('exist')
-        .should('be.visible')
         .click()
+
 
         // Check if we arrives at correct page
         cy.url().should('include', '/')

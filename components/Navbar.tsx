@@ -36,7 +36,7 @@ const Navbar = () => {
     return (
         <nav id="navbar" data-testid="navbar" className='w-full fixed z-40'>
             <div className={`px-4 md:px-16 py-6 flex flex-row items-center transition duration-500 ${showBackground ? "bg-zinc-900 bg-opacity-90" : ""}`}>
-                <div className='flex-row ml-8 gap-7 hidden lg:flex'>
+                <div id='desktop-menu' className='flex-row ml-8 gap-7 hidden lg:flex'>
                     <NavbarItem label='Home' />
                     <NavbarItem label='About' />
                     <NavbarItem label='Profile' />
@@ -48,7 +48,7 @@ const Navbar = () => {
                     <BsChevronDown className={`w-4 text-white fill-white transition ${showMobileMenu ? 'rotate-180' : 'rotate-0'}`} /> {/** Use backticks ` instead of quotation marks ' or " */}
                     <MobileMenu visible={showMobileMenu} />
                 </div>
-                <div onClick={toggleShowAccountMenu} data-testid="account-menu-button" className='flex flex-row ml-auto gap-7 items-center '>
+                <div onClick={toggleShowAccountMenu} id="account-menu-button" data-testid="account-menu-button" className='flex flex-row ml-auto gap-7 items-center '>
                     <div className='text-gray-200 hover:text-gray-300 cursor-pointer transition'>
                         <BsSearch />
                     </div>
