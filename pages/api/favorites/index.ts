@@ -15,7 +15,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const { currentUser } = await serverAuth(req)
 
         // Return Redis Cache'd data, if exists
-        let cache = await redis.get(`favorites_${currentUser.id}`);
+        let cache = await redis.get("favorites_" + currentUser.id);
         if (cache) {
             return res.status(200).json(JSON.parse(cache));
         }
