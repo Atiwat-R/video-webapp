@@ -15,9 +15,9 @@ const Watch = () => {
     const visible = true // For hiding upper navbar. May implement later
 
     return (
-        <div className="h-screen w-screen bg-black">
+        <div id='watch' className="h-screen w-screen bg-black">
             <nav className={`fixed w-full p-4 z-10 flex flex-row items-center gap-8 bg-black bg-opacity-70 ${visible? "" : "hidden"}`}>
-                <AiOutlineArrowLeft onClick={() => router.push('/')} size={40} className="text-white cursor-pointer" />
+                <AiOutlineArrowLeft id='home-page-button' onClick={() => router.push('/')} size={40} className="text-white cursor-pointer" />
                 <p className="text-white text-1xl md:text-3xl font-bold">
                     <span className="font-light">
                         Watching:
@@ -26,6 +26,7 @@ const Watch = () => {
                 </p>
             </nav>
             <video 
+                id='watch-video'
                 src={data?.videoUrl} 
                 className="h-full w-full"
                 autoPlay

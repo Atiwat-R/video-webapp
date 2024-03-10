@@ -17,8 +17,9 @@ const Billboard = () => {
     }, [openModal, data?.id])
 
     return (
-        <div className='relative h-[56.25vw]'>
+        <div id='billboard' className='relative h-[56.25vw]'>
             <video 
+                id='billboard-video'
                 className='h-full h-[56.25vw] object-cover brightness-[60%]'
                 autoPlay
                 muted

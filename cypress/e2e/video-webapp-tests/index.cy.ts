@@ -126,6 +126,35 @@ describe('Index/Home Page', () => {
 
   })
 
+  it('Billboard Shows Video', () => {
+
+    // Billboard exists
+    cy.get('#billboard')
+    .should('exist')
+    .should('be.visible')
+
+    // Video exists
+    cy.get('#billboard-video')
+    .should('exist')
+    .should('be.visible')
+    .should('have.attr', 'src')
+
+    cy.get('#billboard-video')
+    .should('have.attr', 'src')
+    .should('not.be.empty');
+
+    // Video is playing
+    cy.get('#billboard-video')
+    .should('have.prop', 'paused', false)
+
+    // Video is autoplay on loop
+    cy.get('#billboard-video')
+    .should('have.attr', 'autoPlay')
+    cy.get('#billboard-video')
+    .should('have.attr', 'loop')
+
+  })
+
   it('More Info / InfoModal Displays Correctly', () => {
 
     // Let Movies Load
@@ -181,5 +210,46 @@ describe('Index/Home Page', () => {
     cy.url().should('include', '/watch')
 
   })
+
+  it('MovieCard Displays On Hover', () => {
+
+    // Let Movies Load
+    cy.wait(2000) // 2 sec
+
+    // Hover over MovieCard
+    cy.get('#movie-card')
+    .trigger('mouseover', { delay: 3000 }) 
+
+    // Movie detail is shown
+    cy.get('#movie-card-detail')
+    .should('exist')
+    .should('be.visible')
+
+    // Remove mouse hover
+    cy.get('#movie-card')
+    .trigger('mouseout')
+
+    // MovieCard detail should disappear
+    cy.get('#movie-card-detail')
+    .should('not.exist')
+
+  })
+
+  it('MovieCard Play Button', () => {
+
+    // Let Movies Load
+    cy.wait(2000) // 2 sec
+
+    cy.get('#movie-card')
+    .trigger('mouseover', { delay: 3000 })
+    .within(() => {
+      cy.get('#play-button').click()
+
+      cy.url().should('include', '/watch')
+    })
+
+  })
+
+
 
 })

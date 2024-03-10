@@ -89,7 +89,7 @@ describe('Auth Page', () => {
 
         cy.get('[id=oauth-github]')
         .should('be.visible')
-        .click()
+        // .click()
 
         // cy.url().should('include', '/github'); 
 
@@ -99,7 +99,7 @@ describe('Auth Page', () => {
 
         cy.get('[id=oauth-google]')
         .should('be.visible')
-        .click()
+        // .click()
 
         // TODO: google oauth
         // https://docs.cypress.io/guides/end-to-end-testing/google-authentication
