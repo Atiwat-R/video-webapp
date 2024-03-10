@@ -128,6 +128,9 @@ describe('Index/Home Page', () => {
 
   it('More Info / InfoModal Displays Correctly', () => {
 
+    // Let Movies Load
+    cy.wait(2000) // 2 sec
+
     // InfoModal is hidden at first
     cy.get('[id=info-modal]')
     .should('not.exist')
@@ -153,7 +156,6 @@ describe('Index/Home Page', () => {
     // InfoModal is hidden finally
     cy.get('[id=info-modal]')
     .should('not.exist')
-
   })
 
   it('Home Page Play Button Works', () => {

@@ -15,7 +15,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const { currentUser } = await serverAuth(req)
 
         // Return Redis Cache'd data, if exists
-        let cache = await redis.get("favorites");
+        let cache = await redis.get(`favorites_${currentUser.id}`);
         if (cache) {
             return res.status(200).json(JSON.parse(cache));
         }
@@ -30,8 +30,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             }
         })
 
-        // Upload data onto Redis
-        await redis.set("favorites", JSON.stringify(favoritesList), 'EX', REDIS_CACHE_EXPIRATION);
+        // Cache data on Redis
+        await redis.set("favorites_" + currentUser.id, JSON.stringify(favoritesList), 'EX', REDIS_CACHE_EXPIRATION);
         
         return res.status(200).json(favoritesList);
 

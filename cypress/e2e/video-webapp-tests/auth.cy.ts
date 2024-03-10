@@ -85,7 +85,7 @@ describe('Auth Page', () => {
         cy.url().should('include', '/profiles')
     })
 
-    it.only('Sign in with Github OAuth', () => {
+    it('Sign in with Github OAuth', () => {
 
         cy.get('[id=oauth-github]')
         .should('be.visible')

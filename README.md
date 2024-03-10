@@ -43,3 +43,9 @@ Run locally:
 - npm install
 - npm run dev
 
+Cypress test:
+- In one terminal: 
+    - npm run dev
+- In second terminal:
+    - npx cypress open
+

@@ -36,7 +36,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         })
 
         // Delete old cache from Redis, to pave way for the new
-        await redis.del("favorites");
+        await redis.del("favorites_" + currentUser.id);
 
         return res.status(200).json(updatedUser)
 
