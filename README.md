@@ -49,3 +49,4 @@ Cypress test:
 - In second terminal:
     - npx cypress open
 
+NOTE: Run Cypress in Windows instead of Linux or WSL

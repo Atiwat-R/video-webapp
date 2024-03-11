@@ -26,39 +26,42 @@ const MovieCard: React.FC<MovieCardProps> = ({ data }) => {
         >
             <img
                 id='movie-card-thumbnail'
-                className="cursor-pointer object-cover transition duration shadow-xl rounded-md w-full h-[12vw]"
+                className="cursor-pointer object-cover transition duration shadow-xl rounded-md w-full h-[12vw] absolute"
                 src={data.thumbnailUrl}
                 alt="Thumbnail"
             />
-            {isDetailVisible && (
-                <div id='movie-card-detail' className="opacity-100 absolute top-0 transition duration-200 z-10 w-full scale-110 translate-y-[6vw] translate-x-[2vw]">
-                    <img
-                        className="cursor-pointer object-cover transition duration shadow-xl rounded-t-md w-full h-[12vw]"
-                        src={data.thumbnailUrl}
-                        alt="Thumbnail"
-                    />
-                    <div className="z-10 bg-zinc-800 p-2 lg:p-4 absolute w-full transition shadow-md rounded-b-md">
-                        <div className="flex flex-row items-center gap-3">
-                            <div id='play-button' onClick={() => router.push(`/watch/${data?.id}`)} className="cursor-pointer w-6 h-6 lg:w-10 lg:h-10 bg-white rounded-full flex justify-center items-center transition hover:bg-neutral-300">
-                                <BsFillPlayFill size={30} />
+            <div className={"opacity-0 scale-0 transition duration-200 delay-300 group-hover:scale-110 group-hover:opacity-100"}>
+                {isDetailVisible && (
+                    <div id='movie-card-detail' className="opacity-100 absolute z-10 top-0 transition duration-200 w-full scale-110 translate-y-[-7vw] translate-x-[0vw]">
+                        <img
+                            className="cursor-pointer object-cover transition duration shadow-xl rounded-t-md w-full h-[12vw]"
+                            src={data.thumbnailUrl}
+                            alt="Thumbnail"
+                        />
+                        <div id='info-pane' className="z-10 bg-zinc-800 p-2 lg:p-4 absolute w-full transition shadow-md rounded-b-md">
+                            <div className="flex flex-row items-center gap-3">
+                                <div id='play-button' onClick={() => router.push(`/watch/${data?.id}`)} className="cursor-pointer w-6 h-6 lg:w-10 lg:h-10 bg-white rounded-full flex justify-center items-center transition hover:bg-neutral-300">
+                                    <BsFillPlayFill size={30} />
+                                </div>
+                                <FavoriteButton movieId={data?.id}/>
+                                <div id='like-button' onClick={() => openModal(data?.id)} className="cursor-pointer m1-auto group/item w-6 h-6 lg:w-10 lg:h-10 border-white border-2 rounded-full flex justify-center items-center transition hover:border-neutral-300">
+                                    <MdMoreHoriz size={25} className="text-white group-hover/item:text-neutral-300"/>
+                                </div>
                             </div>
-                            <FavoriteButton movieId={data?.id}/>
-                            <div id='like-button' onClick={() => openModal(data?.id)} className="cursor-pointer m1-auto group/item w-6 h-6 lg:w-10 lg:h-10 border-white border-2 rounded-full flex justify-center items-center transition hover:border-neutral-300">
-                                <MdMoreHoriz size={25} className="text-white group-hover/item:text-neutral-300"/>
+                            <p className="text-green-400 font-semibold mt-4">
+                                New <span className="text-white">2023</span>
+                            </p>
+                            <div className="flex flex-row mt-4 gap-2 items-center">
+                                <p className="text-white text-[10px] lg:text-sm">{data.duration}</p>
                             </div>
-                        </div>
-                        <p className="text-green-400 font-semibold mt-4">
-                            New <span className="text-white">2023</span>
-                        </p>
-                        <div className="flex flex-row mt-4 gap-2 items-center">
-                            <p className="text-white text-[10px] lg:text-sm">{data.duration}</p>
-                        </div>
-                        <div className="flex flex-row items-center gap-2 mt-4 text-[8px] text-white lg:text-sm">
-                            <p>{data.genre}</p>
+                            <div className="flex flex-row items-center gap-2 mt-4 text-[8px] text-white lg:text-sm">
+                                <p>{data.genre}</p>
+                            </div>
                         </div>
                     </div>
-                </div>
-            )}
+                )}
+            </div>
+            
         </div>
     )
 }
