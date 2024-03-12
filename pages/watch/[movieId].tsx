@@ -12,11 +12,18 @@ const Watch = () => {
     const { movieId } = router.query
     const { data } = useMovie(movieId as string)
 
-    const visible = true // For hiding upper navbar. May implement later
+    const [isPanelVisible, setIsPanelVisible] = useState(true);
 
     return (
-        <div id='watch' className="h-screen w-screen bg-black">
-            <nav className={`fixed w-full p-4 z-10 flex flex-row items-center gap-8 bg-black bg-opacity-70 ${visible? "" : "hidden"}`}>
+        <div 
+            id='watch' 
+            className="h-screen w-screen bg-black"
+            onMouseEnter={() => setIsPanelVisible(true)}
+            onMouseLeave={() => setIsPanelVisible(false)}
+        >
+            <nav 
+                id='watch-panel' 
+                className={`transition delay-100 fixed w-full p-4 z-10 flex flex-row items-center gap-8 bg-black bg-opacity-70 ${isPanelVisible? "" : "transition delay-700 opacity-0"}`}>
                 <AiOutlineArrowLeft id='home-page-button' onClick={() => router.push('/')} size={40} className="text-white cursor-pointer" />
                 <p className="text-white text-1xl md:text-3xl font-bold">
                     <span className="font-light">
