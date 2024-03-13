@@ -36,3 +36,4 @@ next-env.d.ts
 
 # Self-add
 .env
+google-service-acc-key.json

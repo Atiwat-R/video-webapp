@@ -19,6 +19,7 @@ Use:
 - Database
     - MongoDB
     - Prisma (ORM for Database)
+    - Google Cloud Storage (Cloud Storage)
 - Deployment
     - Vercel
 - Testing
@@ -36,10 +37,12 @@ Environment Variables (.env):
 - GOOGLE_CLIENT_ID=
 - GOOGLE_CLIENT_SECRET=
 - REDIS_URL="rediss://default:< PASSWORD >@< ENDPOINT >:< PORT >"
+- GOOGLE_SERVICE_ACCOUNT_KEY="/path/your-key.json"
 
 
 Run locally:
 - Create .env file with completed environment variables
+- Bring in a key.json file to link with your Google Service Account (Cloud Storage)
 - npm install
 - npm run dev
 
