@@ -25,7 +25,7 @@ const MultiFileUpload = () => {
 
             
             <label htmlFor="files" className="text-white text-4xl mb-8 font-semibold">
-                Upload Movies:
+                Upload Multiple Files:
             </label>
             <input
                 type="file"
@@ -42,7 +42,7 @@ const MultiFileUpload = () => {
                 ))}
             </ul>
             <button onClick={() => fileInputRef.current?.click()} className="bg-gray-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                Upload Files
+                Select Files
             </button>
             <button onClick={() => handleSubmit()} className='text-red-500 hover:text-red-700 font-bold mt-4 py-2 px-4 rounded text-right'>
                 Submit
