@@ -10,16 +10,22 @@ const UploadMovie = () => {
 
   const movieFileInputRef = useRef<HTMLInputElement>(null);
   const [movieFile, setMovieFile] = useState<File | null>(null);
+  const [movieDuration, setMovieDuration] = useState<number | null>(null)
 
   const thumbnailFileInputRef = useRef<HTMLInputElement>(null);
   const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
-  
+
+  // Handle when User Inputted a Movie File
   const handleMovieFileChange = (event: React.ChangeEvent<HTMLInputElement>,) => {
       const file = event.target.files && event.target.files[0];
       if (file) {
         setMovieFile(file);
+
       }
+
+      console.log("Video duration:", movieDuration);
   }
+  // Handle when User Inputted an Image File
   const handleThumbnailFileChange = (event: React.ChangeEvent<HTMLInputElement>,) => {
       const file = event.target.files && event.target.files[0];
       if (file) {
@@ -27,18 +33,14 @@ const UploadMovie = () => {
       }
   }
 
-  const handleSubmit = () => {
-    console.log(movieFile)
-    return movieFile
-  }
-
+  // Handle clicking a button
   const handleButtonClick = (inputRef: React.RefObject<HTMLInputElement>) => {
     if (inputRef.current) {
       inputRef.current.click();
     }
   };
 
-  // When user chose the Movie, they can view the Movie in-browser
+  // View the inputted Video in-browser
   const handleClickInputtedMovie = (file: File | null) => {
       // Exit the function if there's no file
       if (file == null) { return }
@@ -47,7 +49,7 @@ const UploadMovie = () => {
       const videoData = file
 
       // Create a Blob from the video data
-      const blob = new Blob([videoData], { type: 'video/mp4' });
+      const blob = new Blob([videoData]);
 
       // Create a URL for the Blob
       const blobURL = URL.createObjectURL(blob);
@@ -57,8 +59,8 @@ const UploadMovie = () => {
       newTab?.document.write('<html><body><video controls src="' + blobURL + '"></video></body></html>');
   }
 
-    // When user chose the Movie, they can view the Movie in-browser
-    const handleClickInputtedThumbnail = (file: File | null) => {
+  // View the inputted Image in-browser
+  const handleClickInputtedThumbnail = (file: File | null) => {
       // Exit the function if there's no file
       if (file == null) { return }
 
@@ -80,6 +82,22 @@ const UploadMovie = () => {
       };
 
       reader.readAsDataURL(blob);
+  }
+
+  // Submit all new data to Storage
+  const handleSubmit = () => {
+    if (
+      movieName == "" ||
+      movieDesc == "" ||
+      movieFile == null ||
+      thumbnailFile == null
+    ) {
+      alert("Incomplete Parameters")
+      return
+    }
+
+    // console.log(movieFile)
+    return
   }
 
   return (
@@ -146,3 +164,90 @@ const UploadMovie = () => {
 };
 
 export default UploadMovie;
+
+
+
+
+
+
+
+
+
+
+
+
+
+  // Get duration of the video
+
+
+
+
+
+  // const getVideoDuration = (file: File | null): Promise<number | null> => {
+  //   // Error if there's no file
+  //   if (file == null) { throw new Error("No file") }
+  
+  //   // There's video data in File
+  //   const videoData = file;
+  
+  //   // Create a Blob from the video data
+  //   const blob = new Blob([videoData]);
+  
+  //   // Create a URL for the Blob
+  //   const blobURL = URL.createObjectURL(blob);
+  
+  //   // Promise to handle asynchronous video loading
+  //   return new Promise((resolve, reject) => {
+  //     const video = document.createElement('video');
+  //     video.src = blobURL;
+  
+  //     // Listen for the 'loadedmetadata' event
+  //     video.addEventListener('loadedmetadata', function() {
+  //       const duration = video.duration;
+  //       resolve(duration); // Resolve the promise with duration
+  //       URL.revokeObjectURL(blobURL); // Cleanup
+  //       video.remove(); // Remove the video element
+  //     });
+  
+  //     // Optional: Handle errors during loading
+  //     video.addEventListener('error', (error) => {
+  //       reject(error); // Reject the promise with error
+  //       URL.revokeObjectURL(blobURL);
+  //       video.remove();
+  //     });
+  
+  //     // Append the video element (needed for some browsers)
+  //     document.body.appendChild(video);
+  //   });
+  // };
+
+  // const setVideoDuration = (file: File | null) => {
+  //   // Exit the function if there's no file
+  //   if (file == null) { return }
+
+  //   // There's video data in File
+  //   const videoData = file; 
+
+  //   // Create a Blob from the video data
+  //   const blob = new Blob([videoData]);
+
+  //   // Create a URL for the Blob
+  //   const blobURL = URL.createObjectURL(blob);
+
+  //   // Create a video element
+  //   const video = document.createElement('video');
+  //   video.src = blobURL;
+
+  //   // Listen for the 'loadedmetadata' event to ensure video metadata is loaded
+  //   video.addEventListener('loadedmetadata', function() {
+  //     const duration = video.duration;
+  //     console.log(duration)
+  //     setMovieDuration(duration)
+  //   });
+
+  //   // Append the video element to the document body to trigger loading
+  //   document.body.appendChild(video);
+
+  //   return video.duration
+
+  // }

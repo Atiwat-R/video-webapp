@@ -5,12 +5,23 @@ import { transferManager } from '@/lib/cloudStorage';
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     try {
         // Check if request is POST
-        if (req.method !== 'GET') {
+        if (req.method !== 'POST') {
             return res.status(405).end(); // Error 405 Method Not Allowed
         }
   
         console.log("CLOUD UPLOAD API")
         console.log(req.body.data)
+
+        const { movieName, movieDesc, movieFile, ThumbnailFile } = req.body
+
+        const movieData = {
+            "title": movieName,
+            "description":movieDesc,
+            "videoUrl":"http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+            "thumbnailUrl":"https://upload.wikimedia.org/wikipedia/commons/7/70/Big.Buck.Bunny.-.Opening.Screen.png",
+            "genre":"Comedy",
+            "duration":"10 minutes"
+         }
 
         const bucketName = "https://console.cloud.google.com/storage/browser/video-webapp-all-movies"
         const newMovies = [""]
