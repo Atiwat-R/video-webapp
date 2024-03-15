@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react';
 import Input from "@/components/input";
 import InputTextArea from './InputTextArea';
+import getVideoDurationInSeconds from 'get-video-duration'
 
 
 const UploadMovie = () => {
@@ -16,11 +17,14 @@ const UploadMovie = () => {
   const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
 
   // Handle when User Inputted a Movie File
-  const handleMovieFileChange = (event: React.ChangeEvent<HTMLInputElement>,) => {
+  const handleMovieFileChange = async (event: React.ChangeEvent<HTMLInputElement>,) => {
       const file = event.target.files && event.target.files[0];
+      
       if (file) {
         setMovieFile(file);
-
+        await getVideoDurationFromFile(file)
+          .then(duration => setMovieDuration(duration)) // Update state with duration
+          .catch(() => setMovieDuration(null)); // Set null on error
       }
 
       console.log("Video duration:", movieDuration);
@@ -83,6 +87,51 @@ const UploadMovie = () => {
 
       reader.readAsDataURL(blob);
   }
+
+
+  async function getVideoDurationFromFile(file: File | null): Promise<number | null> {
+    if (!file) {
+      return null
+    }
+  
+    const blob = new Blob([file]);
+    const blobURL = URL.createObjectURL(blob);
+  
+    try {
+      const duration = await getVideoDurationInSeconds(blobURL); // Use get-video-duration
+      return duration;
+    } catch (error) {
+      return null;
+    } finally {
+      URL.revokeObjectURL(blobURL); // Revoke temporary URL
+    }
+  }
+
+
+  // const getVideoDuration = (file: File | null) => {
+
+  //     // Error if there's no file
+  //   if (file == null) { throw new Error("No file") }
+  
+  //   // There's video data in File
+  //   const videoData = file;
+  
+  //   // Create a Blob from the video data
+  //   const blob = new Blob([videoData]);
+
+  //   // Using Blob
+  //   getVideoDuration(blob)
+  //   .then(duration => console.log("Video duration:", duration))
+  //   .catch(error => console.error(error));
+
+  //   // Using temporary URL (if created)
+  //   getVideoDuration(blobURL)
+  //   .then(duration => console.log("Video duration:", duration))
+  //   .catch(error => console.error(error));
+
+  //   // Remember to revoke the temporary URL after use
+  //   URL.revokeObjectURL(blobURL);
+  // }
 
   // Submit all new data to Storage
   const handleSubmit = () => {
