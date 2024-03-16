@@ -89,22 +89,28 @@ const UploadMovie = () => {
   }
 
   // Get duration for a video
-  const getVideoDuration = async (file: File | null): Promise<number | undefined> => {
-    if (!file) return;
+const getVideoDuration = async (file: File | null): Promise<number | undefined> => {
+  if (!file) return;
   
-    const url = URL.createObjectURL(file);
-    const video = document.createElement('video');
-    video.style.display = 'none'; // Hide the video element
-    video.src = url;
+  const reader = new FileReader();
   
-    // Wait for the video to load metadata asynchronously
-    await new Promise((resolve) => video.onloadedmetadata = resolve);
+  return new Promise<number>((resolve, reject) => {
+    reader.onload = () => {
+      const video = document.createElement('video');
+      video.onloadedmetadata = () => {
+        const duration = video.duration;
+        resolve(duration);
+      };
+      video.src = String(reader.result);
+    };
   
-    const duration = video.duration;
-    URL.revokeObjectURL(url); // Clean up the temporary URL
+    reader.onerror = () => {
+      reject(new Error('Error reading video file'));
+    };
   
-    return duration;
-  };
+    reader.readAsDataURL(file);
+  });
+};
 
   // Helper for handleSubmit. Checks if all info are complete
   const isInputsComplete = () => {
@@ -156,11 +162,12 @@ const UploadMovie = () => {
     // Store Files & JSON in FormData
     const formData = new FormData() 
     if (movieFile && thumbnailFile) {
-      // formData.append('file', movieFile);
-      // formData.append('file', thumbnailFile);
+      // formData.append('movieFile', movieFile);
+      // formData.append('thumbnailFile', thumbnailFile);
       formData.append('jsonData', JSON.stringify(jsonData));
     }
     
+    // console.log(formData.get('thumbnailFile'))
 
     await axios.post("/api/uploader", formData, {
       headers: {

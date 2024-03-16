@@ -10,33 +10,35 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }
   
         console.log("CLOUD UPLOAD API")
-        console.log(req.body.data)
+        const jsonDataString = req.body.match(/name="jsonData"\r\n\r\n(.*)\r\n/);
+        const jsonData = JSON.parse(jsonDataString[1]);
 
-        const { movieName, movieDesc, movieDuration, movieFile, thumbnailFile } = req.body.data
+        console.log(jsonData)
 
-        const movieData = {
-            "title": movieName,
-            "description":movieDesc,
-            "videoUrl":"http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-            "thumbnailUrl":"https://upload.wikimedia.org/wikipedia/commons/7/70/Big.Buck.Bunny.-.Opening.Screen.png",
-            "genre":"Comedy",
-            "duration":"10 minutes"
-        }
+        // const movieData = {
+        //     "title": movieName,
+        //     "description":movieDesc,
+        //     "videoUrl":"http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+        //     "thumbnailUrl":"https://upload.wikimedia.org/wikipedia/commons/7/70/Big.Buck.Bunny.-.Opening.Screen.png",
+        //     "genre":"Comedy",
+        //     "duration":"10 minutes"
+        // }
 
-        const bucketName = "https://console.cloud.google.com/storage/browser/video-webapp-all-movies"
-        const newMovies = [""]
+        // const bucketName = "https://console.cloud.google.com/storage/browser/video-webapp-all-movies"
+        // const newMovies = [""]
 
-        const uploader = transferManager(bucketName)
-        await uploader.uploadManyFiles(newMovies);
+        // const uploader = transferManager(bucketName)
+        // await uploader.uploadManyFiles(newMovies);
 
-        for (const filePath of newMovies) {
-            console.log(`${filePath} uploaded to ${bucketName}.`);
-        }
+        // for (const filePath of newMovies) {
+        //     console.log(`${filePath} uploaded to ${bucketName}.`);
+        // }
   
 
         return res.status(200).json({'Success':1});
 
     } catch (error) {
+        console.log(error)
         return res.status(400).json({ error: `Something went wrong: ${error}` });
     }
 }
