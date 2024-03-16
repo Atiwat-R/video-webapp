@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import Input from "@/components/input";
 import InputTextArea from './InputTextArea';
-import getVideoDurationInSeconds from 'get-video-duration'
+import axios from 'axios';
 
 
 const UploadMovie = () => {
@@ -11,7 +11,7 @@ const UploadMovie = () => {
 
   const movieFileInputRef = useRef<HTMLInputElement>(null);
   const [movieFile, setMovieFile] = useState<File | null>(null);
-  const [movieDuration, setMovieDuration] = useState<number | null>(null)
+  const [movieDuration, setMovieDuration] = useState<number | undefined>()
 
   const thumbnailFileInputRef = useRef<HTMLInputElement>(null);
   const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
@@ -21,13 +21,13 @@ const UploadMovie = () => {
       const file = event.target.files && event.target.files[0];
       
       if (file) {
-        setMovieFile(file);
-        await getVideoDurationFromFile(file)
+        setMovieFile(file)
+        
+        await getVideoDuration(file)
           .then(duration => setMovieDuration(duration)) // Update state with duration
-          .catch(() => setMovieDuration(null)); // Set null on error
+          .catch(() => new Error("ERRA")); // Set null on error
       }
 
-      console.log("Video duration:", movieDuration);
   }
   // Handle when User Inputted an Image File
   const handleThumbnailFileChange = (event: React.ChangeEvent<HTMLInputElement>,) => {
@@ -60,7 +60,7 @@ const UploadMovie = () => {
 
       // Open the Blob URL in a new tab
       const newTab = window.open();
-      newTab?.document.write('<html><body><video controls src="' + blobURL + '"></video></body></html>');
+      newTab?.document.write('<html><body><video controls id="inputted-movie" src="' + blobURL + '"></video></body></html>');
   }
 
   // View the inputted Image in-browser
@@ -88,65 +88,90 @@ const UploadMovie = () => {
       reader.readAsDataURL(blob);
   }
 
-
-  async function getVideoDurationFromFile(file: File | null): Promise<number | null> {
-    if (!file) {
-      return null
-    }
+  // Get duration for a video
+  const getVideoDuration = async (file: File | null): Promise<number | undefined> => {
+    if (!file) return;
   
-    const blob = new Blob([file]);
-    const blobURL = URL.createObjectURL(blob);
+    const url = URL.createObjectURL(file);
+    const video = document.createElement('video');
+    video.style.display = 'none'; // Hide the video element
+    video.src = url;
   
-    try {
-      const duration = await getVideoDurationInSeconds(blobURL); // Use get-video-duration
-      return duration;
-    } catch (error) {
-      return null;
-    } finally {
-      URL.revokeObjectURL(blobURL); // Revoke temporary URL
-    }
-  }
-
-
-  // const getVideoDuration = (file: File | null) => {
-
-  //     // Error if there's no file
-  //   if (file == null) { throw new Error("No file") }
+    // Wait for the video to load metadata asynchronously
+    await new Promise((resolve) => video.onloadedmetadata = resolve);
   
-  //   // There's video data in File
-  //   const videoData = file;
+    const duration = video.duration;
+    URL.revokeObjectURL(url); // Clean up the temporary URL
   
-  //   // Create a Blob from the video data
-  //   const blob = new Blob([videoData]);
+    return duration;
+  };
 
-  //   // Using Blob
-  //   getVideoDuration(blob)
-  //   .then(duration => console.log("Video duration:", duration))
-  //   .catch(error => console.error(error));
-
-  //   // Using temporary URL (if created)
-  //   getVideoDuration(blobURL)
-  //   .then(duration => console.log("Video duration:", duration))
-  //   .catch(error => console.error(error));
-
-  //   // Remember to revoke the temporary URL after use
-  //   URL.revokeObjectURL(blobURL);
-  // }
-
-  // Submit all new data to Storage
-  const handleSubmit = () => {
+  // Helper for handleSubmit. Checks if all info are complete
+  const isInputsComplete = () => {
     if (
       movieName == "" ||
       movieDesc == "" ||
       movieFile == null ||
       thumbnailFile == null
     ) {
-      alert("Incomplete Parameters")
+      alert("Please Fill In All Parameters")
+      return false
+    }
+    else if (movieDuration == undefined) {
+      alert("Processing, please retry in a few seconds")
+      return false
+    }
+    return true
+  }
+
+  // Turn seconds to minutes, returning a string
+  const secondsToMinutes = (seconds: any) => {
+    if (typeof seconds === 'number') {
+      const minutes = Math.floor(seconds / 60)
+      const formattedMinutes = minutes.toString()
+      return `${formattedMinutes}`
+    }
+  }
+
+  // Submit all new data to Storage
+  const handleSubmit = async () => {
+    
+    if (!isInputsComplete()) {
+      console.log("Incomplete")
       return
     }
 
-    // console.log(movieFile)
-    return
+    // if (movieDuration != undefined) {
+    //   console.log(movieDuration)
+    //   console.log(secondsToMinutes(movieDuration))
+    // }
+
+    // Prepare movie data in JSON
+    const jsonData = {
+      "movieName": movieName,
+      "movieDesc": movieDesc,
+      "movieDuration": secondsToMinutes(movieDuration),
+    }
+
+    // Store Files & JSON in FormData
+    const formData = new FormData() 
+    if (movieFile && thumbnailFile) {
+      // formData.append('file', movieFile);
+      // formData.append('file', thumbnailFile);
+      formData.append('jsonData', JSON.stringify(jsonData));
+    }
+    
+
+    await axios.post("/api/uploader", formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      }
+    }).then(() => {
+        console.log("Upload Success")
+    }).catch((error) => {
+        console.log(error)
+    })
+  
   }
 
   return (

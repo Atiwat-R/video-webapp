@@ -12,7 +12,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         console.log("CLOUD UPLOAD API")
         console.log(req.body.data)
 
-        const { movieName, movieDesc, movieFile, ThumbnailFile } = req.body
+        const { movieName, movieDesc, movieDuration, movieFile, thumbnailFile } = req.body.data
 
         const movieData = {
             "title": movieName,
@@ -21,7 +21,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             "thumbnailUrl":"https://upload.wikimedia.org/wikipedia/commons/7/70/Big.Buck.Bunny.-.Opening.Screen.png",
             "genre":"Comedy",
             "duration":"10 minutes"
-         }
+        }
 
         const bucketName = "https://console.cloud.google.com/storage/browser/video-webapp-all-movies"
         const newMovies = [""]
