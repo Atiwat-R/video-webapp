@@ -5,17 +5,15 @@ import { transferManager } from '@/lib/cloudStorage';
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     try {
         // Check if request is POST
-        if (req.method !== 'POST') {
-            return res.status(405).end(); // Error 405 Method Not Allowed
-        }
+        // if (req.method !== 'POST') {
+        //     return res.status(405).end(); // Error 405 Method Not Allowed
+        // }
   
-        console.log("CLOUD UPLOAD API")
-        const jsonDataString = req.body.match(/name="jsonData"\r\n\r\n(.*)\r\n/);
-        const jsonData = JSON.parse(jsonDataString[1]);
+        console.log("MOVIE API JOKESTER")
 
-        const thumbnailFile = req.body.thumbnailFile
+        const { movieFile } = req.body
 
-        console.log(thumbnailFile) 
+        console.log(req.body) 
 
         // const movieData = {
         //     "title": movieName,
@@ -35,9 +33,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         // for (const filePath of newMovies) {
         //     console.log(`${filePath} uploaded to ${bucketName}.`);
         // }
-  
 
-        return res.status(200).json({'Success':1});
 
     } catch (error) {
         console.log(error)

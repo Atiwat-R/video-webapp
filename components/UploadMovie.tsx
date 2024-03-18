@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react';
 import Input from "@/components/input";
 import InputTextArea from './InputTextArea';
 import axios from 'axios';
+import * as tus from 'tus-js-client'
 
 
 const UploadMovie = () => {
@@ -15,6 +16,9 @@ const UploadMovie = () => {
 
   const thumbnailFileInputRef = useRef<HTMLInputElement>(null);
   const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
+
+  const [loading, setLoading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
 
   // Handle when User Inputted a Movie File
   const handleMovieFileChange = async (event: React.ChangeEvent<HTMLInputElement>,) => {
@@ -130,6 +134,40 @@ const getVideoDuration = async (file: File | null): Promise<number | undefined> 
     return true
   }
 
+  const uploadDaMovie = (file: File) => {
+
+      // Create a new tus upload
+      var upload = new tus.Upload(file, {
+        endpoint: '/api/upload_tus',
+        retryDelays: [0, 3000, 5000, 10000, 20000],
+        metadata: {
+          filename: file.name,
+          filetype: file.type,
+        },
+        onError: function (error) {
+          console.log('Failed because: ' + error)
+        },
+        onProgress: function (bytesUploaded, bytesTotal) {
+          var percentage = ((bytesUploaded / bytesTotal) * 100).toFixed(2)
+          console.log(bytesUploaded, bytesTotal, percentage + '%')
+        },
+        onSuccess: function () {
+          console.log('Success TUS')
+        },
+      })
+
+      // Check if there are any previous uploads to continue.
+      upload.findPreviousUploads().then(function (previousUploads) {
+        // Found previous uploads so we select the first one.
+        if (previousUploads.length) {
+          upload.resumeFromPreviousUpload(previousUploads[0])
+        }
+
+        // Start the upload
+        upload.start()
+      })
+  }
+
   // Turn seconds to minutes, returning a string
   const secondsToMinutes = (seconds: any) => {
     if (typeof seconds === 'number') {
@@ -141,51 +179,64 @@ const getVideoDuration = async (file: File | null): Promise<number | undefined> 
 
   // Submit all new data to Storage
   const handleSubmit = async () => {
-    
     if (!isInputsComplete()) {
-      console.log("Incomplete")
-      return
+      console.log("Incomplete");
+      return;
     }
-
-    // if (movieDuration != undefined) {
-    //   console.log(movieDuration)
-    //   console.log(secondsToMinutes(movieDuration))
-    // }
-
-    // Prepare movie data in JSON
+  
     const jsonData = {
       "movieName": movieName,
       "movieDesc": movieDesc,
       "movieDuration": secondsToMinutes(movieDuration),
-    }
-
-    // Store Files & JSON in FormData
-    const formData = new FormData() 
-    if (movieFile && thumbnailFile) {
-      // formData.append('movieFile', movieFile);
-      // formData.append('thumbnailFile', thumbnailFile);
-      formData.append('jsonData', JSON.stringify(jsonData));
-    }
-    
-    // console.log(formData.get('thumbnailFile'))
-
-    await axios.post("/api/uploader", formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      }
-    }).then(() => {
-        console.log("Upload Success")
-    }).catch((error) => {
-        console.log(error)
-    })
+    };
   
-  }
+    const formData = new FormData();
+    if (movieFile && thumbnailFile) {
+      formData.append('movieFile', movieFile);
+      // formData.append('thumbnailFile', thumbnailFile);
+      // formData.append('jsonData', JSON.stringify(jsonData));
+    }
+
+    console.log(formData)
+
+    if (movieFile !== null) uploadDaMovie(movieFile)
+    
+
+
+  //   try {
+  //     // Show loading indicator
+  //     setLoading(true);
+  
+  //     await axios.post("/api/upload_movie", formData, {
+  //       headers: {
+  //         'Content-Type': 'multipart/form-data',
+  //       },
+  //       transformRequest: formData => formData,
+  //       // Track upload progress
+  //       onUploadProgress: progressEvent => {
+  //         const { loaded, total } = progressEvent;
+  //         if (!total) return
+  //         const progress = Math.round((loaded * 100) / total);
+  //         setUploadProgress(progress);
+  //       }
+  //     });
+  //     console.log("Upload Success");
+  //   } 
+  //   catch (error) {
+  //     console.log(error);
+  //     // Handle error
+  //   } finally {
+  //     // Hide loading indicator
+  //     setLoading(false);
+  //     setUploadProgress(0);
+  //   }
+  };
 
   return (
 
     <div className='text-white flex justify-center'>
         <div className='bg-black bg-opacity-70 px-16 py-16 self-center mt-2 rounded-md w-full space-y-4'>
-
+          {uploadProgress}
           <Input 
             id="movieName"
             onChange={(event: any) => setMovieName(event.target.value)}
