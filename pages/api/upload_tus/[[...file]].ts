@@ -1,7 +1,9 @@
 import type {NextApiRequest, NextApiResponse} from 'next'
-import {Server, Upload} from '@tus/server'
-import {FileStore} from '@tus/file-store'
-import path from 'path'
+
+import { Server , Upload } from '@tus/server'
+import { FileStore } from '@tus/file-store'
+import { GCSStore } from '@tus/gcs-store'
+import { Storage } from '@google-cloud/storage'
 
 /**
  * !Important. This will tell Next.js NOT Parse the body as tus requires
@@ -13,15 +15,27 @@ export const config = {
   },
 }
 
-const myPath = path.join(process.cwd(), 'tempMovie')
+const storage = new Storage({keyFilename: process.env.GOOGLE_SERVICE_ACCOUNT_KEY_FILE})
+
 
 const tusServer = new Server({
-  // `path` needs to match the route declared by the next file router
-  // ie /api/upload
   path: '/api/upload_tus',
-  datastore: new FileStore({directory: myPath}),
+  datastore: new GCSStore({
+    bucket: storage.bucket('video-webapp-all-movies'),
+  }),
 })
 
-export default function handler(req: NextApiRequest, res: NextApiResponse) {
-  return tusServer.handle(req, res)
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+    await tusServer.handle(req, res)
+    .then(() => {
+        console.log(res.statusMessage) 
+    })
+    .catch((error) => {
+        console.log(error)
+        res.status(500).json({ message: 'Upload error' })
+    })
 }
+
+
+// const myPath = path.join(process.cwd(), 'tempMovie')
+// datastore: new FileStore({directory: myPath}),

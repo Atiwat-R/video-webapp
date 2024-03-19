@@ -37,7 +37,7 @@ Environment Variables (.env):
 - GOOGLE_CLIENT_ID=
 - GOOGLE_CLIENT_SECRET=
 - REDIS_URL="rediss://default:< PASSWORD >@< ENDPOINT >:< PORT >"
-- GOOGLE_SERVICE_ACCOUNT_KEY="/path/your-key.json"
+- GOOGLE_SERVICE_ACCOUNT_KEY_FILE="/path/your-key.json"
 
 
 Run locally:

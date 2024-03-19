@@ -149,6 +149,7 @@ const getVideoDuration = async (file: File | null): Promise<number | undefined> 
         },
         onProgress: function (bytesUploaded, bytesTotal) {
           var percentage = ((bytesUploaded / bytesTotal) * 100).toFixed(2)
+          setUploadProgress(Number(percentage))
           console.log(bytesUploaded, bytesTotal, percentage + '%')
         },
         onSuccess: function () {
