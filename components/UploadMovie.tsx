@@ -3,6 +3,7 @@ import Input from "@/components/input";
 import InputTextArea from './InputTextArea';
 import axios from 'axios';
 import * as tus from 'tus-js-client'
+import { Hash } from 'crypto';
 
 
 const UploadMovie = () => {
@@ -12,6 +13,7 @@ const UploadMovie = () => {
 
   const movieFileInputRef = useRef<HTMLInputElement>(null);
   const [movieFile, setMovieFile] = useState<File | null>(null);
+  const [movieUrl, setMovieUrl] = useState<string | undefined>("");
   const [movieDuration, setMovieDuration] = useState<number | undefined>()
 
   const thumbnailFileInputRef = useRef<HTMLInputElement>(null);
@@ -19,6 +21,8 @@ const UploadMovie = () => {
 
   const [loading, setLoading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
+
+  // const [jsonData, setJsonData] = useState<{ [key: string]: any }>({})
 
   // Handle when User Inputted a Movie File
   const handleMovieFileChange = async (event: React.ChangeEvent<HTMLInputElement>,) => {
@@ -134,7 +138,7 @@ const getVideoDuration = async (file: File | null): Promise<number | undefined> 
     return true
   }
 
-  const uploadDaMovie = (file: File) => {
+  const uploadDaMovie = async (file: File) => {
 
       // Create a new tus upload
       var upload = new tus.Upload(file, {
@@ -153,12 +157,16 @@ const getVideoDuration = async (file: File | null): Promise<number | undefined> 
           console.log(bytesUploaded, bytesTotal, percentage + '%')
         },
         onSuccess: function () {
-          console.log('Success TUS')
+          console.log('Successfully Upload ' + file.name)
+
+          // Extract new filename from URL and add it to jsonData
+          const lastSlashIndex = upload.url?.lastIndexOf('/') 
+          if (lastSlashIndex) setMovieUrl(upload.url?.substring(lastSlashIndex + 1))
         },
       })
 
       // Check if there are any previous uploads to continue.
-      upload.findPreviousUploads().then(function (previousUploads) {
+      upload.findPreviousUploads().then(function (previousUploads: string | any[]) {
         // Found previous uploads so we select the first one.
         if (previousUploads.length) {
           upload.resumeFromPreviousUpload(previousUploads[0])
@@ -185,7 +193,8 @@ const getVideoDuration = async (file: File | null): Promise<number | undefined> 
       return;
     }
   
-    const jsonData = {
+
+    const oldjsonData = {
       "movieName": movieName,
       "movieDesc": movieDesc,
       "movieDuration": secondsToMinutes(movieDuration),
@@ -200,7 +209,12 @@ const getVideoDuration = async (file: File | null): Promise<number | undefined> 
 
     console.log(formData)
 
-    if (movieFile !== null) uploadDaMovie(movieFile)
+    if (movieFile !== null) {
+      await uploadDaMovie(movieFile).then(() => {
+        console.log(movieUrl)
+      })
+      
+    }
     
 
 
