@@ -1,7 +1,6 @@
 import type {NextApiRequest, NextApiResponse} from 'next'
 
-import { Server , Upload } from '@tus/server'
-import { FileStore } from '@tus/file-store'
+import { Server } from '@tus/server'
 import { GCSStore } from '@tus/gcs-store'
 import { Storage } from '@google-cloud/storage'
 
