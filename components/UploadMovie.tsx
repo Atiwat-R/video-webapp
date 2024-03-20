@@ -13,7 +13,6 @@ const UploadMovie = () => {
 
   const movieFileInputRef = useRef<HTMLInputElement>(null);
   const [movieFile, setMovieFile] = useState<File | null>(null);
-  const [movieUrl, setMovieUrl] = useState<string | undefined>("");
   const [movieDuration, setMovieDuration] = useState<number | undefined>()
 
   const thumbnailFileInputRef = useRef<HTMLInputElement>(null);
@@ -138,8 +137,8 @@ const getVideoDuration = async (file: File | null): Promise<number | undefined> 
     return true
   }
 
-  const uploadDaMovie = async (file: File) => {
-
+  const uploadDaMovie = (file: File): Promise<string> => {
+    return new Promise<string>((resolve, reject) => {
       // Create a new tus upload
       var upload = new tus.Upload(file, {
         endpoint: '/api/upload_tus',
@@ -150,6 +149,7 @@ const getVideoDuration = async (file: File | null): Promise<number | undefined> 
         },
         onError: function (error) {
           console.log('Failed because: ' + error)
+          reject(error);
         },
         onProgress: function (bytesUploaded, bytesTotal) {
           var percentage = ((bytesUploaded / bytesTotal) * 100).toFixed(2)
@@ -158,24 +158,29 @@ const getVideoDuration = async (file: File | null): Promise<number | undefined> 
         },
         onSuccess: function () {
           console.log('Successfully Upload ' + file.name)
-
-          // Extract new filename from URL and add it to jsonData
-          const lastSlashIndex = upload.url?.lastIndexOf('/') 
-          if (lastSlashIndex) setMovieUrl(upload.url?.substring(lastSlashIndex + 1))
+          // Extract new filename from URL and resolve it
+          if (upload.url) {
+            const lastSlashIndex = upload.url.lastIndexOf('/') 
+            const newMovieUrl = lastSlashIndex !== -1 ? upload.url.substring(lastSlashIndex + 1) : upload.url;
+            resolve(newMovieUrl);
+          } else {
+            reject(new Error('Movie URL not found'));
+          }
         },
-      })
-
+      });
+    
       // Check if there are any previous uploads to continue.
       upload.findPreviousUploads().then(function (previousUploads: string | any[]) {
         // Found previous uploads so we select the first one.
         if (previousUploads.length) {
-          upload.resumeFromPreviousUpload(previousUploads[0])
+          upload.resumeFromPreviousUpload(previousUploads[0]);
         }
-
+    
         // Start the upload
-        upload.start()
-      })
-  }
+        upload.start();
+      });
+    });
+  };
 
   // Turn seconds to minutes, returning a string
   const secondsToMinutes = (seconds: any) => {
@@ -210,9 +215,10 @@ const getVideoDuration = async (file: File | null): Promise<number | undefined> 
     console.log(formData)
 
     if (movieFile !== null) {
-      await uploadDaMovie(movieFile).then(() => {
-        console.log(movieUrl)
-      })
+      uploadDaMovie(movieFile)
+        .then((newMovieUrl) => {
+          console.log(newMovieUrl);
+        })
       
     }
     
