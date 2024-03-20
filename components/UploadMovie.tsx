@@ -18,21 +18,21 @@ const UploadMovie = () => {
   const thumbnailFileInputRef = useRef<HTMLInputElement>(null);
   const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
 
-  const [loading, setLoading] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState(0);
+  const [movieLoading, setMovieLoading] = useState(false);
+  const [movieUploadProgress, setMovieUploadProgress] = useState(0);
 
-  // const [jsonData, setJsonData] = useState<{ [key: string]: any }>({})
+  const [thumbnailLoading, setThumbnailLoading] = useState(false);
+  const [thumbnailUploadProgress, setThumbnailUploadProgress] = useState(0);
+
 
   // Handle when User Inputted a Movie File
   const handleMovieFileChange = async (event: React.ChangeEvent<HTMLInputElement>,) => {
       const file = event.target.files && event.target.files[0];
-      
       if (file) {
         setMovieFile(file)
-        
         await getVideoDuration(file)
           .then(duration => setMovieDuration(duration)) // Update state with duration
-          .catch(() => new Error("ERRA")); // Set null on error
+          .catch(() => new Error("Error")); // Set null on error
       }
 
   }
@@ -51,7 +51,7 @@ const UploadMovie = () => {
     }
   };
 
-  // View the inputted Video in-browser
+  // For user viewing the inputted Video in-browser
   const handleClickInputtedMovie = (file: File | null) => {
       // Exit the function if there's no file
       if (file == null) { return }
@@ -70,13 +70,13 @@ const UploadMovie = () => {
       newTab?.document.write('<html><body><video controls id="inputted-movie" src="' + blobURL + '"></video></body></html>');
   }
 
-  // View the inputted Image in-browser
+  // For user viewing the inputted Image in-browser
   const handleClickInputtedThumbnail = (file: File | null) => {
       // Exit the function if there's no file
       if (file == null) { return }
 
-      // Assuming 'file' contains the image data
-      const imageData = file; // Replace this with your actual file data
+      // Data in file
+      const imageData = file; 
 
       // Create a Blob from the image data
       const blob = new Blob([imageData]);
@@ -96,28 +96,28 @@ const UploadMovie = () => {
   }
 
   // Get duration for a video
-const getVideoDuration = async (file: File | null): Promise<number | undefined> => {
-  if (!file) return;
+  const getVideoDuration = async (file: File | null): Promise<number | undefined> => {
+    if (!file) return;
+    
+    const reader = new FileReader();
   
-  const reader = new FileReader();
-  
-  return new Promise<number>((resolve, reject) => {
-    reader.onload = () => {
-      const video = document.createElement('video');
-      video.onloadedmetadata = () => {
-        const duration = video.duration;
-        resolve(duration);
+    return new Promise<number>((resolve, reject) => {
+      reader.onload = () => {
+        const video = document.createElement('video');
+        video.onloadedmetadata = () => {
+          const duration = video.duration;
+          resolve(duration);
+        };
+        video.src = String(reader.result);
       };
-      video.src = String(reader.result);
-    };
   
-    reader.onerror = () => {
-      reject(new Error('Error reading video file'));
-    };
-  
-    reader.readAsDataURL(file);
-  });
-};
+      reader.onerror = () => {
+        reject(new Error('Error reading video file'));
+      };
+    
+      reader.readAsDataURL(file);
+    });
+  };
 
   // Helper for handleSubmit. Checks if all info are complete
   const isInputsComplete = () => {
@@ -137,7 +137,7 @@ const getVideoDuration = async (file: File | null): Promise<number | undefined> 
     return true
   }
 
-  const uploadDaMovie = (file: File): Promise<string> => {
+  const resumableUploadMovie = (file: File): Promise<string> => {
     return new Promise<string>((resolve, reject) => {
       // Create a new tus upload
       var upload = new tus.Upload(file, {
@@ -153,7 +153,7 @@ const getVideoDuration = async (file: File | null): Promise<number | undefined> 
         },
         onProgress: function (bytesUploaded, bytesTotal) {
           var percentage = ((bytesUploaded / bytesTotal) * 100).toFixed(2)
-          setUploadProgress(Number(percentage))
+          setMovieUploadProgress(Number(percentage))
           console.log(bytesUploaded, bytesTotal, percentage + '%')
         },
         onSuccess: function () {
@@ -161,8 +161,8 @@ const getVideoDuration = async (file: File | null): Promise<number | undefined> 
           // Extract new filename from URL and resolve it
           if (upload.url) {
             const lastSlashIndex = upload.url.lastIndexOf('/') 
-            const newMovieUrl = lastSlashIndex !== -1 ? upload.url.substring(lastSlashIndex + 1) : upload.url;
-            resolve(newMovieUrl);
+            const newFilename = lastSlashIndex !== -1 ? upload.url.substring(lastSlashIndex + 1) : upload.url;
+            resolve(newFilename);
           } else {
             reject(new Error('Movie URL not found'));
           }
@@ -198,66 +198,33 @@ const getVideoDuration = async (file: File | null): Promise<number | undefined> 
       return;
     }
   
-
-    const oldjsonData = {
+    const jsonData = {
       "movieName": movieName,
       "movieDesc": movieDesc,
       "movieDuration": secondsToMinutes(movieDuration),
+      "movieUrl": "",
+      "thumbnailUrl": ""
     };
-  
-    const formData = new FormData();
-    if (movieFile && thumbnailFile) {
-      formData.append('movieFile', movieFile);
-      // formData.append('thumbnailFile', thumbnailFile);
-      // formData.append('jsonData', JSON.stringify(jsonData));
-    }
 
-    console.log(formData)
 
-    if (movieFile !== null) {
-      uploadDaMovie(movieFile)
-        .then((newMovieUrl) => {
-          console.log(newMovieUrl);
+    if (movieFile) {
+      resumableUploadMovie(movieFile)
+        .then((newFilename) => {
+          const movieUrl = "https://storage.cloud.google.com/" + process.env.NEXT_PUBLIC_MOVIES_BUCKET_NAME + "/" + newFilename
+          console.log(movieUrl);
+          jsonData["movieUrl"] = movieUrl
         })
-      
     }
+
+    console.log(jsonData)
     
-
-
-  //   try {
-  //     // Show loading indicator
-  //     setLoading(true);
-  
-  //     await axios.post("/api/upload_movie", formData, {
-  //       headers: {
-  //         'Content-Type': 'multipart/form-data',
-  //       },
-  //       transformRequest: formData => formData,
-  //       // Track upload progress
-  //       onUploadProgress: progressEvent => {
-  //         const { loaded, total } = progressEvent;
-  //         if (!total) return
-  //         const progress = Math.round((loaded * 100) / total);
-  //         setUploadProgress(progress);
-  //       }
-  //     });
-  //     console.log("Upload Success");
-  //   } 
-  //   catch (error) {
-  //     console.log(error);
-  //     // Handle error
-  //   } finally {
-  //     // Hide loading indicator
-  //     setLoading(false);
-  //     setUploadProgress(0);
-  //   }
   };
 
   return (
 
     <div className='text-white flex justify-center'>
         <div className='bg-black bg-opacity-70 px-16 py-16 self-center mt-2 rounded-md w-full space-y-4'>
-          {uploadProgress}
+          {movieUploadProgress}
           <Input 
             id="movieName"
             onChange={(event: any) => setMovieName(event.target.value)}
