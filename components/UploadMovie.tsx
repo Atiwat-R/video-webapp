@@ -137,7 +137,8 @@ const UploadMovie = () => {
     return true
   }
 
-  const resumableUploadMovie = (file: File): Promise<string> => {
+  // Upload file using Resumable Upload
+  const resumableUploadFile = (file: File, bucket: string, setProgress?: Function): Promise<string> => {
     return new Promise<string>((resolve, reject) => {
       // Create a new tus upload
       var upload = new tus.Upload(file, {
@@ -147,14 +148,19 @@ const UploadMovie = () => {
           filename: file.name,
           filetype: file.type,
         },
+        headers: {
+          bucket: bucket // Header data is actually accessible in the backend
+        },
         onError: function (error) {
           console.log('Failed because: ' + error)
           reject(error);
         },
         onProgress: function (bytesUploaded, bytesTotal) {
-          var percentage = ((bytesUploaded / bytesTotal) * 100).toFixed(2)
-          setMovieUploadProgress(Number(percentage))
-          console.log(bytesUploaded, bytesTotal, percentage + '%')
+          if (setProgress !== undefined) {
+            var percentage = ((bytesUploaded / bytesTotal) * 100).toFixed(2)
+            setProgress(Number(percentage))
+            console.log(bytesUploaded, bytesTotal, percentage + '%')
+          }
         },
         onSuccess: function () {
           console.log('Successfully Upload ' + file.name)
@@ -164,7 +170,7 @@ const UploadMovie = () => {
             const newFilename = lastSlashIndex !== -1 ? upload.url.substring(lastSlashIndex + 1) : upload.url;
             resolve(newFilename);
           } else {
-            reject(new Error('Movie URL not found'));
+            reject(new Error('File URL not found'));
           }
         },
       });
@@ -206,13 +212,25 @@ const UploadMovie = () => {
       "thumbnailUrl": ""
     };
 
-
-    if (movieFile) {
-      resumableUploadMovie(movieFile)
+    // Upload Movie File
+    const movie_bucket = process.env.NEXT_PUBLIC_MOVIES_BUCKET_NAME
+    if (movieFile && movie_bucket) {
+      resumableUploadFile(movieFile, movie_bucket, setMovieUploadProgress)
         .then((newFilename) => {
-          const movieUrl = "https://storage.cloud.google.com/" + process.env.NEXT_PUBLIC_MOVIES_BUCKET_NAME + "/" + newFilename
+          const movieUrl = "https://storage.cloud.google.com/" + movie_bucket + "/" + newFilename
           console.log(movieUrl);
           jsonData["movieUrl"] = movieUrl
+        })
+    }
+
+    // Upload Thumbnail File
+    const thumbnail_bucket = process.env.NEXT_PUBLIC_THUMBNAIL_BUCKET_NAME
+    if (thumbnailFile && thumbnail_bucket) {
+      resumableUploadFile(thumbnailFile, thumbnail_bucket, setThumbnailUploadProgress)
+        .then((newFilename) => {
+          const thumbnailUrl = "https://storage.cloud.google.com/" + thumbnail_bucket + "/" + newFilename
+          console.log(thumbnailUrl);
+          jsonData["thumbnailUrl"] = thumbnailUrl
         })
     }
 
@@ -224,7 +242,9 @@ const UploadMovie = () => {
 
     <div className='text-white flex justify-center'>
         <div className='bg-black bg-opacity-70 px-16 py-16 self-center mt-2 rounded-md w-full space-y-4'>
-          {movieUploadProgress}
+          Movie: {movieUploadProgress}
+          <br />
+          Thumbnail: {thumbnailUploadProgress}
           <Input 
             id="movieName"
             onChange={(event: any) => setMovieName(event.target.value)}
