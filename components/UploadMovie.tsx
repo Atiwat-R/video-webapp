@@ -18,10 +18,8 @@ const UploadMovie = () => {
   const thumbnailFileInputRef = useRef<HTMLInputElement>(null);
   const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
 
-  const [movieLoading, setMovieLoading] = useState(false);
+  const [showUploadProgress, setShowUploadProgress] = useState(false);
   const [movieUploadProgress, setMovieUploadProgress] = useState(0);
-
-  const [thumbnailLoading, setThumbnailLoading] = useState(false);
   const [thumbnailUploadProgress, setThumbnailUploadProgress] = useState(0);
 
 
@@ -212,6 +210,8 @@ const UploadMovie = () => {
       "thumbnailUrl": ""
     };
 
+    setShowUploadProgress(true)
+
     // Upload Movie File
     const movie_bucket = process.env.NEXT_PUBLIC_MOVIES_BUCKET_NAME
     if (movieFile && movie_bucket) {
@@ -242,9 +242,6 @@ const UploadMovie = () => {
 
     <div className='text-white flex justify-center'>
         <div className='bg-black bg-opacity-70 px-16 py-16 self-center mt-2 rounded-md w-full space-y-4'>
-          Movie: {movieUploadProgress}
-          <br />
-          Thumbnail: {thumbnailUploadProgress}
           <Input 
             id="movieName"
             onChange={(event: any) => setMovieName(event.target.value)}
@@ -273,7 +270,7 @@ const UploadMovie = () => {
               Select Movie 
             </button>
             <button onClick={() => handleClickInputtedMovie(movieFile)} className='text-blue-600 underline hover:text-blue-700 font-bold mt-4 py-2 px-4 rounded text-right'>
-              {movieFile?.name}
+              {movieFile?.name} 
             </button>
           </div>
 
@@ -297,6 +294,11 @@ const UploadMovie = () => {
               Submit
           </button>
 
+          <div id="upload-progress" className={"font-bold " + (showUploadProgress ? "" : "hidden")}>
+            Uploading Movie: <span className={movieUploadProgress == 100 ? "text-green-400" : "text-orange-400"}> {movieUploadProgress}% </span> 
+            <br />
+            Uploading Thumbnail: <span className={thumbnailUploadProgress == 100 ? "text-green-400" : "text-orange-400"}> {thumbnailUploadProgress}% </span> 
+          </div>
             
         </div>
     </div>
@@ -306,7 +308,7 @@ const UploadMovie = () => {
 export default UploadMovie;
 
 
-
+// {movieLoading ? <span className='absolute text-white-900! font-bold'>{movieUploadProgress}</span> : null}
 
 
 
