@@ -3,7 +3,7 @@
 A Web Application for watching movies and videos. Furnished with authentication system, React frontend UI, MongoDB database, and more.
 
 Vercel deployed site:
-- https://video-webapp-5emfb3zok-atiwat-rs-projects.vercel.app/
+- https://video-webapp-5i6nh2ibo-atiwat-rs-projects.vercel.app
 
 
 Use:
