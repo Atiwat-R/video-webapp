@@ -9,7 +9,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             return res.status(405).end(); // Error 405 Method Not Allowed
         }
   
-        console.log("UPLOAD API")
+        console.log("Upload JSON to Database")
         console.log(req.body.data)
   
         // Create Movie
@@ -20,7 +20,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(200).json({'Success':1});
 
     } catch (error) {
-        return res.status(400).json({ error: `Something went wrong: ${error}` });
+        return res.status(400).json({ error: `Error at /api/upload.ts: ${error}` });
     }
 }
 

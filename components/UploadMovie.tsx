@@ -186,6 +186,17 @@ const UploadMovie = () => {
     });
   };
 
+  // Upload Movie's Metadata and URLs to MongoDB
+  const uploadJsonData = async (jsonData: any) => {
+    await axios.post("/api/upload", {
+        data: jsonData
+    }).then(() => {
+        console.log("Upload Json Data: Success")
+    }).catch((error) => {
+        console.log(error)
+    })
+  }
+
   // Turn seconds to minutes, returning a string
   const secondsToMinutes = (seconds: any) => {
     if (typeof seconds === 'number') {
@@ -201,41 +212,45 @@ const UploadMovie = () => {
       console.log("Incomplete");
       return;
     }
-  
-    const jsonData = {
-      "movieName": movieName,
-      "movieDesc": movieDesc,
-      "movieDuration": secondsToMinutes(movieDuration),
-      "movieUrl": "",
-      "thumbnailUrl": ""
-    };
+
+    var jsonData = {
+      "title" : movieName,
+      "description" : movieDesc,
+      "videoUrl" : "",
+      "thumbnailUrl" : "",
+      "genre" : "Action",
+      "duration" : secondsToMinutes(movieDuration) + " minutes"
+   }
 
     setShowUploadProgress(true)
 
     // Upload Movie File
     const movie_bucket = process.env.NEXT_PUBLIC_MOVIES_BUCKET_NAME
-    if (movieFile && movie_bucket) {
-      resumableUploadFile(movieFile, movie_bucket, setMovieUploadProgress)
-        .then((newFilename) => {
-          const movieUrl = "https://storage.cloud.google.com/" + movie_bucket + "/" + newFilename
-          console.log(movieUrl);
-          jsonData["movieUrl"] = movieUrl
-        })
-    }
-
-    // Upload Thumbnail File
     const thumbnail_bucket = process.env.NEXT_PUBLIC_THUMBNAIL_BUCKET_NAME
-    if (thumbnailFile && thumbnail_bucket) {
-      resumableUploadFile(thumbnailFile, thumbnail_bucket, setThumbnailUploadProgress)
-        .then((newFilename) => {
-          const thumbnailUrl = "https://storage.cloud.google.com/" + thumbnail_bucket + "/" + newFilename
-          console.log(thumbnailUrl);
-          jsonData["thumbnailUrl"] = thumbnailUrl
-        })
+
+    if (movieFile && movie_bucket && thumbnailFile && thumbnail_bucket) {
+      try {
+        // Upload Movie File
+        const movieFilename = await resumableUploadFile(movieFile, movie_bucket, setMovieUploadProgress);
+        const movieUrl = `https://storage.cloud.google.com/${movie_bucket}/${movieFilename}`;
+        console.log(movieUrl);
+        jsonData["videoUrl"] = movieUrl;
+    
+        // Upload Thumbnail File
+        const thumbnailFilename = await resumableUploadFile(thumbnailFile, thumbnail_bucket, setThumbnailUploadProgress);
+        const thumbnailUrl = `https://storage.cloud.google.com/${thumbnail_bucket}/${thumbnailFilename}`;
+        console.log(thumbnailUrl);
+        jsonData["thumbnailUrl"] = thumbnailUrl;
+    
+        // Finally send JSON data
+        await uploadJsonData(jsonData);
+      } 
+      catch (error) {
+        console.error("Error at handleSubmit()", error);
+      }
     }
 
     console.log(jsonData)
-    
   };
 
   return (
@@ -286,7 +301,7 @@ const UploadMovie = () => {
               Select Thumbnail 
             </button>
             <button onClick={() => handleClickInputtedThumbnail(thumbnailFile)} className='text-blue-600 underline hover:text-blue-700 font-bold mt-4 py-2 px-4 rounded text-right'>
-              {thumbnailFile?.name}
+              {thumbnailFile?.name} 
             </button>
           </div>
 
@@ -311,85 +326,24 @@ export default UploadMovie;
 // {movieLoading ? <span className='absolute text-white-900! font-bold'>{movieUploadProgress}</span> : null}
 
 
+      // if (movieFile && movie_bucket && thumbnailFile && thumbnail_bucket) {
 
+    //   // Upload Movie File
+    //   await resumableUploadFile(movieFile, movie_bucket, setMovieUploadProgress)
+    //     .then((newFilename) => {
+    //       const movieUrl = "https://storage.cloud.google.com/" + movie_bucket + "/" + newFilename
+    //       console.log(movieUrl);
+    //       jsonData["movieUrl"] = movieUrl
 
+    //       // Upload Thumbnail File
+    //       resumableUploadFile(thumbnailFile, thumbnail_bucket, setThumbnailUploadProgress)
+    //         .then((newFilename) => {
+    //           const thumbnailUrl = "https://storage.cloud.google.com/" + thumbnail_bucket + "/" + newFilename
+    //           console.log(thumbnailUrl);
+    //           jsonData["thumbnailUrl"] = thumbnailUrl
 
-
-
-
-
-
-  // Get duration of the video
-
-
-
-
-
-  // const getVideoDuration = (file: File | null): Promise<number | null> => {
-  //   // Error if there's no file
-  //   if (file == null) { throw new Error("No file") }
-  
-  //   // There's video data in File
-  //   const videoData = file;
-  
-  //   // Create a Blob from the video data
-  //   const blob = new Blob([videoData]);
-  
-  //   // Create a URL for the Blob
-  //   const blobURL = URL.createObjectURL(blob);
-  
-  //   // Promise to handle asynchronous video loading
-  //   return new Promise((resolve, reject) => {
-  //     const video = document.createElement('video');
-  //     video.src = blobURL;
-  
-  //     // Listen for the 'loadedmetadata' event
-  //     video.addEventListener('loadedmetadata', function() {
-  //       const duration = video.duration;
-  //       resolve(duration); // Resolve the promise with duration
-  //       URL.revokeObjectURL(blobURL); // Cleanup
-  //       video.remove(); // Remove the video element
-  //     });
-  
-  //     // Optional: Handle errors during loading
-  //     video.addEventListener('error', (error) => {
-  //       reject(error); // Reject the promise with error
-  //       URL.revokeObjectURL(blobURL);
-  //       video.remove();
-  //     });
-  
-  //     // Append the video element (needed for some browsers)
-  //     document.body.appendChild(video);
-  //   });
-  // };
-
-  // const setVideoDuration = (file: File | null) => {
-  //   // Exit the function if there's no file
-  //   if (file == null) { return }
-
-  //   // There's video data in File
-  //   const videoData = file; 
-
-  //   // Create a Blob from the video data
-  //   const blob = new Blob([videoData]);
-
-  //   // Create a URL for the Blob
-  //   const blobURL = URL.createObjectURL(blob);
-
-  //   // Create a video element
-  //   const video = document.createElement('video');
-  //   video.src = blobURL;
-
-  //   // Listen for the 'loadedmetadata' event to ensure video metadata is loaded
-  //   video.addEventListener('loadedmetadata', function() {
-  //     const duration = video.duration;
-  //     console.log(duration)
-  //     setMovieDuration(duration)
-  //   });
-
-  //   // Append the video element to the document body to trigger loading
-  //   document.body.appendChild(video);
-
-  //   return video.duration
-
-  // }
+    //           // Finally sent JSON over
+    //           uploadJsonData(jsonData)
+    //         })
+    //     })
+    // }
