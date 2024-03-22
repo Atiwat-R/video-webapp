@@ -129,8 +129,11 @@ const UploadMovie = () => {
       return false
     }
     else if (movieDuration == undefined) {
-      alert("Processing, please retry in a few seconds")
-      return false
+      // alert("Processing, please retry in a few seconds")
+      // return false
+
+      setMovieDuration(0)
+      return true
     }
     return true
   }
@@ -208,6 +211,7 @@ const UploadMovie = () => {
 
   // Submit all new data to Storage
   const handleSubmit = async () => {
+
     if (!isInputsComplete()) {
       console.log("Incomplete");
       return;

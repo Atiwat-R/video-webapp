@@ -39,7 +39,7 @@ const Navbar = () => {
                 <div id='desktop-menu' className='flex-row ml-8 gap-7 hidden lg:flex'>
                     <NavbarItem label='Home' />
                     <NavbarItem label='About' />
-                    <NavbarItem label='Profile' route='/test'/>
+                    <NavbarItem label='Profile'/>
                     <NavbarItem label='Option' />
                     <NavbarItem label='Upload' route='/upload' /> 
                 </div>
