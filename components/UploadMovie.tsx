@@ -140,7 +140,7 @@ const UploadMovie = () => {
     return new Promise<string>((resolve, reject) => {
       // Create a new tus upload
       var upload = new tus.Upload(file, {
-        endpoint: '/api/upload_tus',
+        endpoint: '/api/upload/cloud-storage',
         retryDelays: [0, 3000, 5000, 10000, 20000],
         metadata: {
           filename: file.name,
@@ -188,7 +188,7 @@ const UploadMovie = () => {
 
   // Upload Movie's Metadata and URLs to MongoDB
   const uploadJsonData = async (jsonData: any) => {
-    await axios.post("/api/upload", {
+    await axios.post("/api/upload/database", {
         data: jsonData
     }).then(() => {
         console.log("Upload Json Data: Success")
@@ -278,6 +278,7 @@ const UploadMovie = () => {
             <input
               type="file"
               onChange={handleMovieFileChange}
+              accept="video/mp4, video/webm, video/ogg, video/mpeg, video/quicktime, video/3gpp, video/x-flv, video/x-msvideo, video/x-ms-wmv, video/x-matroska"
               ref={movieFileInputRef}
               className="hidden"
             />

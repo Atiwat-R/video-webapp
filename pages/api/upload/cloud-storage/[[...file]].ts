@@ -25,7 +25,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     // Connect to GCS
     const tusServer = new Server({
-        path: '/api/upload_tus', // Directory name
+        path: '/api/upload/cloud-storage', // Directory name
         datastore: new GCSStore({
           bucket: storage.bucket(bucketDest),
         }),

@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import prismadb from "@/lib/prismadb"
 
-// Backend API Endpoint for Uploading Movies
+// Backend API Endpoint for Uploading Metadata to Relational Database
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     try {
         // Check if request is POST
@@ -9,8 +9,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             return res.status(405).end(); // Error 405 Method Not Allowed
         }
   
-        console.log("Upload JSON to Database")
-        console.log(req.body.data)
+        // console.log("Upload JSON to Database")
+        // console.log(req.body.data)
   
         // Create Movie
         const newMovie = await prismadb.movie.create({
