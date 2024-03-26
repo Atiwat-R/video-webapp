@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import prismadb from "@/lib/prismadb"
+import redis from '@/lib/redis';
 
 // Backend API Endpoint for Uploading Metadata to Relational Database
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -9,13 +10,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             return res.status(405).end(); // Error 405 Method Not Allowed
         }
   
-        // console.log("Upload JSON to Database")
-        // console.log(req.body.data)
-  
         // Create Movie
-        const newMovie = await prismadb.movie.create({
+        await prismadb.movie.create({
             data: req.body.data
         })
+
+        // Delete old cache from Redis, to pave way for the new
+        await redis.del("movies");
 
         return res.status(200).json({'Success':1});
 

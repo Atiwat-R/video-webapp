@@ -1,7 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { without } from 'lodash'
 import prismadb from "@/lib/prismadb"
-import serverAuth from '@/lib/serverAuth';
 import redis from '@/lib/redis';
 
 // Backend API Endpoint removing a movie from favorites list

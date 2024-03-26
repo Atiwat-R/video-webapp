@@ -17,7 +17,7 @@ export const config = {
 // Connect to GCS
 const storage = new Storage({keyFilename: process.env.GOOGLE_SERVICE_ACCOUNT_KEY_FILE})
 
-// Backend API Endpoint for uploading File into Google Cloud Storage
+// Backend API Endpoint for uploading a File into Google Cloud Storage
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 
     // Destination bucket name
