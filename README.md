@@ -5,6 +5,10 @@ A Web Application for watching movies and videos. Furnished with authentication 
 ### Vercel deployed site
 - https://video-webapp-5i6nh2ibo-atiwat-rs-projects.vercel.app
 
+- Guest account in case you don't want to register:
+    - Username: guest
+    - Password: guest
+
 ### Tools Used
 - Frontend
     - React
