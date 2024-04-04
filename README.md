@@ -20,6 +20,7 @@ A Web Application for watching movies and videos. Furnished with authentication 
     - NEXT.js API
     - NextAuth (Authentication)
     - Redis (Server-side Caching)
+    - tus.js (Resumable File Uploads)
 - Database
     - MongoDB
     - Prisma (ORM for Database)
@@ -45,7 +46,7 @@ A Web Application for watching movies and videos. Furnished with authentication 
 - NEXT_PUBLIC_MOVIES_BUCKET_NAME=
 - NEXT_PUBLIC_THUMBNAIL_BUCKET_NAME=
 
-NOTE: A .env.example file is also available
+NOTE: The template is also available in .env.example
 
 ### Run locally
 - Create .env file with completed environment variables
@@ -70,9 +71,15 @@ The main idea for this web application is to be a lite video streaming platform 
 
 The basic tools chosen at the start is essentially React, NEXT.js, and Tailwind. These are relatively modern frameworks, with NEXT.js + TypeScript also allowing for backend API routes implementation, with NEXT.js being built atop Node.js. And Tailwind CSS for decoration and UI design as it provides a simpler implementation than regular CSS.
 
+### Authentication
+
+I use NextAuth to handle authentication, user login, and registration. The email and password required for login is kept in MongoDB database. Once the user register, the password is hashed and salted using Bcrypt before storage.
+
+In addition, OAuth login using a Google and Github account is also implemented.
+
 ### Database
 
-I've used both Relational Database and Cloud Storage to store relevant data. As a video streaming platform, displaying movies for users is a primary goal. For this, I'm using MongoDB and Google CLoud Storage.
+I've used both Relational Database and Cloud Storage to store relevant data. As a video streaming platform, displaying movies for users is a primary goal. For this, I'm using MongoDB and Google Cloud Storage.
 
 MongoDB, as a relational database, is used to store traditional data, such as user accounts, details of each movies, etc. As movie files and thumbnail pictures would be too large to storage in a relational database, I stored them in Google Cloud Storage instead, and associated their links in MongoDB.
 
