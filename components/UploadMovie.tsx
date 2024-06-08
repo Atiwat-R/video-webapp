@@ -236,13 +236,13 @@ const UploadMovie = () => {
       try {
         // Upload Movie File
         const movieFilename = await resumableUploadFile(movieFile, movie_bucket, setMovieUploadProgress);
-        const movieUrl = `https://storage.cloud.google.com/${movie_bucket}/${movieFilename}`;
+        const movieUrl = `https://storage.googleapis.com/${movie_bucket}/${movieFilename}`;
         console.log(movieUrl);
         jsonData["videoUrl"] = movieUrl;
     
         // Upload Thumbnail File
         const thumbnailFilename = await resumableUploadFile(thumbnailFile, thumbnail_bucket, setThumbnailUploadProgress);
-        const thumbnailUrl = `https://storage.cloud.google.com/${thumbnail_bucket}/${thumbnailFilename}`;
+        const thumbnailUrl = `https://storage.googleapis.com/${thumbnail_bucket}/${thumbnailFilename}`;
         console.log(thumbnailUrl);
         jsonData["thumbnailUrl"] = thumbnailUrl;
     
