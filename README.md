@@ -2,14 +2,6 @@
 
 A Web Application for watching movies and videos. Furnished with authentication system, React frontend UI, MongoDB database, and more.
 
-### Vercel deployed site
-- https://video-webapp-git-main-atiwat-rs-projects.vercel.app
-
-
-- Guest account in case you don't want to register:
-    - Email: guest
-    - Password: guest
-
 ### Tools Used
 - Frontend
     - React
